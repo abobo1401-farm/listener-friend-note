@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff6fae" />
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <title>🎧 リスナーフレンドノート 📒</title>
+  <style>
+:root{
+  --bg:#f7f1e7;--card:#fffdf8;--main:#6f9f55;--main2:#a7c77b;--accent:#9a6b45;
+  --text:#45382d;--muted:#837568;--line:#dfd2c2;--danger:#c85f5f;--ok:#4f8b56;
+  --skin:#f1cfb3;--wood:#9a6b45;--leaf:#6f9f55;
+  --shadow:0 8px 24px rgba(112,87,58,.13);--radius:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding:0 14px calc(94px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:20;margin:0 -14px 14px;padding:calc(17px + env(safe-area-inset-top)) 16px 15px;background:linear-gradient(135deg,var(--wood),var(--leaf));color:#fff;border-bottom-left-radius:22px;border-bottom-right-radius:22px;box-shadow:var(--shadow)}
+h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em}.sub{color:#fff;margin-top:4px;font-size:12px;opacity:.94}
+.view{display:none}.view.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:linear-gradient(180deg,#fffdf8,#f2eadf);border:1px solid var(--line);border-radius:16px;padding:13px;text-align:center}.stat .n{font-size:25px;font-weight:900;color:var(--main);line-height:1.1}.stat .label{font-size:12px;color:var(--muted);margin-top:4px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:17px}.search,input,select,textarea{width:100%;font-size:16px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;color:var(--text);outline:none;min-width:0}.search:focus,input:focus,select:focus,textarea:focus{border-color:var(--main);box-shadow:0 0 0 3px rgba(255,111,174,.16)}textarea{min-height:92px;resize:vertical}
+.listener-list{display:flex;flex-direction:column;gap:9px}.listener{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#fff}.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:0 0 44px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--main),var(--accent))}.listener-main{min-width:0;flex:1}.listener-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.listener-meta{margin-top:3px;color:var(--muted);font-size:12px;line-height:1.5}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;background:#eef5e8;color:#4f7d43;font-size:11px;border:1px solid #cbdcbc}
+.tag-filter-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.tag-filter-chip{appearance:none;-webkit-appearance:none;border:1px solid #cbdcbc;background:#f7f9f4;color:#4f7d43;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;font:inherit;cursor:pointer}
+.tag-filter-chip.active{background:#4f7d43;color:#fff;border-color:#4f7d43;box-shadow:0 3px 8px rgba(79,125,67,.3)}
+.toggle-btn{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 10px;background:#f7f5f2;color:var(--muted);font-weight:800;font-size:13px;text-align:center}
+.toggle-btn.active.commented{background:#2f6fed;color:#fff;border-color:#2f6fed;box-shadow:0 3px 8px rgba(47,111,237,.3)}
+.toggle-btn.active.gifted{background:#e0459a;color:#fff;border-color:#e0459a;box-shadow:0 3px 8px rgba(224,69,154,.3)}
+.add-listener-btn{width:100%;border:2px dashed #cdbda9;border-radius:14px;padding:11px;background:#fffdf8;color:var(--accent);font-weight:800;font-size:13px;margin-bottom:10px}
+.color-choice-list{display:flex;flex-wrap:wrap;gap:10px}
+.color-swatch{width:34px;height:34px;border-radius:50%;border:2px solid transparent;box-shadow:0 1px 3px rgba(0,0,0,.15);padding:0}
+.color-swatch.selected{border-color:var(--text);box-shadow:0 0 0 2px #fff,0 0 0 4px var(--text)}
+.color-swatch.none{background:#fff;border:2px dashed var(--line);display:grid;place-items:center;font-size:10px;color:var(--muted)}
+.attendee-name .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;background:#cbb89a}
+.diary-filter-card .search,.diary-filter-card input,.diary-filter-card .mini-btn{font-size:12.5px;padding:8px 10px;border-radius:10px}
+.diary-filter-card .row{gap:7px}
+.mini-btn,.btn{border:none;border-radius:14px;font-weight:800}.mini-btn{padding:8px 10px;background:#f1e8dc;color:var(--wood);white-space:nowrap;border:1px solid #d9c6b4}.btn{width:100%;padding:13px 14px;background:var(--main);color:#fff;box-shadow:0 4px 12px rgba(255,111,174,.2)}.btn.secondary{background:#fff;color:var(--main);border:1px solid var(--main);box-shadow:none}.btn.danger{background:#fff0f3;color:var(--danger);box-shadow:none}.btn.ok{background:#e9fff6;color:var(--ok);box-shadow:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:block;font-size:13px;color:var(--text);margin-bottom:6px;font-weight:800}.field{margin-bottom:11px}.hint{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}.empty{text-align:center;color:var(--muted);padding:24px 8px;font-size:14px}
+.today-list{display:flex;flex-wrap:wrap;gap:8px}.today-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;color:var(--text);font-weight:700}.today-chip.checked{color:#fff;border-color:transparent;background:var(--main)}
+.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:30}.nav-btn{border:none;background:transparent;color:var(--muted);padding:7px 2px;font-size:10px;border-radius:12px}.nav-btn span{display:block;font-size:20px;line-height:1.1;margin-bottom:2px}.nav-btn.active{color:var(--main);background:#eef5e8;font-weight:900}
+.modal{position:fixed;inset:0;background:rgba(60,35,48,.38);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.show{display:flex}.modal-box{width:min(760px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:22px;padding:16px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 12px 40px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:none;background:#f4eef2;color:var(--muted);width:38px;height:38px;border-radius:50%;font-size:20px}.detail-big{font-size:23px;font-weight:900;margin:4px 0 3px}.note-box{background:#fff9df;border:1px solid #f1df9c;border-radius:14px;padding:11px;margin-top:9px;white-space:pre-wrap}.history-item{border-left:5px solid var(--main);padding:10px;background:#f7f1e7;border:1px solid var(--line);border-left-color:var(--main);border-radius:14px;margin-bottom:8px}.history-date{font-size:12px;color:var(--muted)}.history-note{margin-top:3px;white-space:pre-wrap}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar .mini-btn{flex:1}
+.birthday-alert{border-radius:15px;padding:12px;margin-bottom:9px;border:1px solid var(--line)}.birthday-alert.today{background:#eef5e8;border-color:#cbdcbc}.birthday-alert.tomorrow{background:#fff0df;border-color:#e8c79d}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.calendar-title{font-size:18px;font-weight:900;color:var(--main)}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calendar-week{font-size:11px;text-align:center;color:var(--muted);font-weight:800;padding:4px 0}.calendar-day{height:82px;min-height:82px;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;padding:5px;font-size:11px}.calendar-day.other{opacity:.35}.calendar-day.today{outline:2px solid var(--main);background:#f7f1e7}.calendar-day .day-number{font-weight:900}.calendar-day .birthday-name{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;background:var(--main);color:#fff;border-radius:999px;padding:1px 3px;font-size:8px;line-height:14px;text-align:center}.calendar-day .more{font-size:8px;color:var(--main);font-weight:800;margin-top:2px;text-align:center}.upcoming-item{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 2px}.upcoming-item:last-child{border-bottom:none}.upcoming-days{min-width:58px;text-align:center;background:#fff0f7;color:var(--main);border-radius:12px;padding:7px 5px;font-size:11px;font-weight:900}.upcoming-main{flex:1;min-width:0}.upcoming-name{font-weight:900}.upcoming-date{font-size:12px;color:var(--muted);margin-top:2px}
+.choice-chip{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:999px;padding:8px 11px;font-size:13px;box-shadow:none}.choice-chip.selected{background:var(--main);color:#fff;border-color:var(--main)}.choice-wrap{display:flex;flex-wrap:wrap;gap:7px}.diary-list{display:flex;flex-direction:column;gap:9px}.diary-card{border:1px solid var(--line);border-radius:15px;padding:12px;background:#fff}.diary-card h3{font-size:15px;margin:0 0 5px}.diary-meta{font-size:12px;color:var(--muted)}.attendee-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid var(--line)}.attendee-row:last-child{border-bottom:none}.flag-btn{flex:0 0 auto;border:none;border-radius:999px;padding:8px 12px;background:#f4eef2;color:var(--muted);font-size:12px;font-weight:800}.flag-btn.active.attend{background:var(--ok);color:#fff;box-shadow:0 3px 8px rgba(79,139,86,.35)}.flag-btn.active.pachi{background:#e07b1a;color:#fff;box-shadow:0 3px 8px rgba(224,123,26,.35)}
+@media(max-width:430px){.row{grid-template-columns:1fr}.calendar-day{height:76px;min-height:76px;padding:4px}.calendar-day .birthday-name{font-size:7px;line-height:13px}.attendee-row .attendee-name{flex-basis:100%}}
+
+.tag-choice-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.tag-choice{appearance:none;border:1px solid #cdbda9;background:#fffdf8;color:var(--text);border-radius:999px;padding:10px 14px;font-size:14px;font-weight:800;box-shadow:0 2px 6px rgba(112,87,58,.08)}
+.tag-choice.selected{background:linear-gradient(135deg,var(--leaf),var(--main2));color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(79,139,86,.2)}
+.tag-add-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.birthday-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#calendarView.active{display:block}
+#birthdayCalendar{display:block;width:100%;min-height:300px;overflow:visible}
+.calendar-grid{width:100%}
+.calendar-day{overflow:visible;min-width:0}
+.calendar-day.today-day{outline:2px solid var(--leaf);background:#eef5e8}
+.calendar-day .birthday-name{background:var(--wood);cursor:pointer}
+@media(max-width:430px){.tag-add-row{grid-template-columns:1fr}.birthday-selects{grid-template-columns:1fr 1fr}}
+
+.diary-people-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.diary-people-count{font-size:12px;color:var(--main);font-weight:900;white-space:nowrap}
+.attendee-row{transition:background .15s}
+.attendee-row.is-selected{background:#f7fbf3;border-radius:12px;margin:0 -6px;padding:8px 6px;border-bottom-color:transparent}
+.attendee-row.is-selected + .attendee-row{border-top:1px solid var(--line)}
+.attendee-name{flex:1 1 130px;min-width:90px;border:none;border-radius:12px;padding:10px 11px;background:#f4eef2;color:var(--text);font-weight:800;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:none}
+.attendee-name.selected{background:linear-gradient(135deg,var(--leaf),var(--main2));color:#fff}
+.record-btn{flex:0 0 auto;border:1px solid #cfd9f2;border-radius:999px;padding:8px 12px;background:#eef2fb;color:#3f5fa8;font-size:12px;font-weight:800}
+.flag-btn{transition:background .15s,color .15s}
+#diaryPeople .empty{padding:14px 4px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 id="appTitle">🎧 リスナーフレンドノート 📒</h1>
+    
+  </header>
+
+  <section id="homeView" class="view active">
+    <div class="grid">
+      <div class="stat"><div class="n" id="totalListeners">0</div><div class="label">登録リスナー</div></div>
+      <div class="stat"><div class="n" id="birthdayCount">0</div><div class="label">今月の誕生日</div></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">🎂 今日・明日の誕生日</h2>
+      <div id="birthdayAlerts"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">最近登録した人（直近3日）</h2>
+      <div id="recentListeners" class="listener-list"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">もうすぐ誕生日</h2>
+      <div id="birthdayList" class="listener-list"></div>
+    </div>
+  </section>
+
+  <section id="listenersView" class="view">
+    <div class="card">
+      <input id="searchInput" class="search" placeholder="名前・呼び方・タグで検索" />
+    </div>
+    <div class="card">
+      <h2 class="section-title">リスナー一覧 <button class="mini-btn" onclick="openListenerForm()">＋登録</button></h2>
+      <div id="tagFilterBar"></div>
+      <div id="listenerList" class="listener-list"></div>
+    </div>
+  </section>
+
+  <section id="diaryView" class="view">
+    <div class="card diary-filter-card">
+      <input id="diarySearch" class="search" placeholder="配信内容・話した内容・リスナー名で検索" oninput="renderDiaries()" />
+      <div class="row" style="margin-top:8px;align-items:center">
+        <div class="field" style="margin:0">
+          <input id="diaryMonthFilter" type="month" onchange="renderDiaries()" />
+        </div>
+        <button class="mini-btn" onclick="clearDiaryFilters()">絞り込み解除</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">配信日記 <button class="mini-btn" onclick="openDiaryForm()">＋新しい日記</button></h2>
+      <div class="hint">配信時間、配信内容、何を話したか、来てくれたリスナー、✅出席、👏ないぱちを記録します。</div>
+    </div>
+    <div class="card"><div id="diaryList" class="listener-list"></div></div>
+  </section>
+
+  <section id="calendarView" class="view">
+    <div class="card">
+      <div class="calendar-head">
+        <button class="mini-btn" onclick="changeCalendarMonth(-1)">‹ 前月</button>
+        <div id="calendarTitle" class="calendar-title"></div>
+        <button class="mini-btn" onclick="changeCalendarMonth(1)">翌月 ›</button>
+      </div>
+      <div id="birthdayCalendar"></div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">🎂 誕生日が近い人</h2>
+      <div id="upcomingBirthdays"></div>
+    </div>
+  </section>
+
+  <section id="settingsView" class="view">
+    <div class="card">
+      <h2 class="section-title">表示設定</h2>
+      <div class="field">
+        <label>テーマカラー</label>
+        <div class="row" style="grid-template-columns:auto 1fr;align-items:center;gap:10px">
+          <input id="themeColorInput" type="color" oninput="applyAndSaveThemeColor(this.value)" style="width:56px;height:44px;padding:3px;border-radius:12px" />
+          <button type="button" class="mini-btn" onclick="resetThemeColor()">初期色に戻す</button>
+        </div>
+        <div class="hint">ボタンやヘッダーなど、アプリ全体の色に反映されます。</div>
+      </div>
+      <div class="field">
+        <label>タイトル</label>
+        <input id="appTitleInput" placeholder="🎧 リスナーフレンドノート 📒" oninput="applyAndSaveAppTitle(this.value)" />
+        <div class="row" style="margin-top:8px">
+          <button type="button" class="mini-btn" onclick="resetAppTitle()">初期タイトルに戻す</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">タグ管理</h2>
+      <div id="tagMasterList" class="chips"></div>
+      <div class="row" style="margin-top:10px">
+        <input id="newMasterTag" placeholder="新しいタグ名" />
+        <button class="mini-btn" onclick="addMasterTag()">＋追加</button>
+      </div>
+      <div class="hint" style="margin-top:8px">タグを押すと削除できます。使用中のタグを削除しても、リスナーに付いている記録は残ります。</div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">データ管理</h2>
+      <div class="toolbar">
+        <button class="mini-btn" onclick="exportData()">JSON保存</button>
+        <button class="mini-btn" onclick="document.getElementById('importFile').click()">JSON読込</button>
+        <input id="importFile" type="file" accept=".json,application/json" hidden />
+      </div>
+      <div class="hint" style="margin-top:10px">データはこの端末のブラウザ内に保存されます。機種変更やブラウザ変更前にはJSON保存をしてください。</div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">並び順</h2>
+      <select id="sortSelect">
+        <option value="recent">最終来訪が新しい順</option>
+        <option value="name">名前順</option>
+        <option value="count">来訪回数が多い順</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <button class="btn danger" onclick="resetAllData()">全データを削除</button>
+    </div>
+
+    <div class="card">
+      <div class="hint" style="text-align:center;line-height:1.8">
+        製作者＠ABO<br>
+        本アプリは個人の配信活動サポートを目的として作成した非公開ツールです。<br>
+        このファイル・ソースコードの無断複製、改造、再配布、第三者への提供、商用利用を禁止します。
+      </div>
+    </div>
+  </section>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="home" onclick="showView('home')"><span>🏠</span>ホーム</button>
+  <button class="nav-btn" data-view="listeners" onclick="showView('listeners')"><span>👥</span>リスナー</button>
+  <button class="nav-btn" data-view="diary" onclick="showView('diary')"><span>📒</span>配信日記</button>
+  <button class="nav-btn" data-view="calendar" onclick="showView('calendar')"><span>📅</span>カレンダー</button>
+  <button class="nav-btn" data-view="settings" onclick="showView('settings')"><span>⚙️</span>設定</button>
+</nav>
+
+<div id="listenerModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <strong id="formTitle">リスナー登録</strong>
+      <button class="close" onclick="closeModal('listenerModal')">×</button>
+    </div>
+    <input type="hidden" id="listenerId" />
+    <div class="field">
+      <label>リスナー名 *</label>
+      <input id="listenerName" placeholder="例：りんごさん" />
+    </div>
+    <div class="field">
+      <label>呼び方</label>
+      <input id="nickname" placeholder="例：りんちゃん" />
+    </div>
+    <div class="field">
+      <label>アイコンカラー</label>
+      <div id="colorChoices" class="color-choice-list"></div>
+      <div class="hint">一覧のアイコン・配信日記の名前ボタン・誕生日カレンダーの表示色に使われます。</div>
+    </div>
+    <div class="field">
+      <label>初回来訪日</label>
+      <input id="firstVisit" type="date" />
+    </div>
+    <div class="field">
+      <label>誕生日</label>
+      <div class="birthday-selects">
+        <select id="birthMonth"><option value="">月を選択</option></select>
+        <select id="birthDay"><option value="">日を選択</option></select>
+      </div>
+      <div class="hint">年は登録せず、月と日だけ保存します。</div>
+    </div>
+    <div class="field">
+      <label>タグ</label>
+      <div id="listenerTagChoices" class="tag-choice-list"></div>
+      <div class="tag-add-row">
+        <input id="newListenerTag" placeholder="新しいタグを入力" />
+        <button type="button" class="mini-btn" onclick="addListenerTagCandidate()">＋追加</button>
+      </div>
+      <div class="hint">候補をワンタップで選択。追加したタグは次回から候補に残ります。</div>
+    </div>
+    <div class="field">
+      <label>好きな歌・話題</label>
+      <textarea id="likes" placeholder="好きな曲、よく話す内容など"></textarea>
+    </div>
+    <div class="field">
+      <label>次に話すメモ</label>
+      <textarea id="nextMemo" placeholder="次に来たとき聞きたいこと"></textarea>
+    </div>
+    <div class="field">
+      <label>自由メモ</label>
+      <textarea id="listenerMemo" placeholder="覚えておきたいこと"></textarea>
+    </div>
+    <button class="btn" onclick="saveListener()">保存する</button>
+  </div>
+</div>
+
+<div id="detailModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <strong>リスナー詳細</strong>
+      <button class="close" onclick="closeModal('detailModal')">×</button>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div id="visitModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <strong>来訪記録を追加</strong>
+      <button class="close" onclick="closeModal('visitModal')">×</button>
+    </div>
+    <input type="hidden" id="visitListenerId" />
+    <div class="field">
+      <label>来訪日</label>
+      <input id="visitDate" type="date" onchange="checkVisitDateExisting()" />
+      <div id="visitEditHint" class="hint" style="display:none;color:#bd7100">この日の記録はすでにあります。保存すると内容が上書き（編集）されます。</div>
+    </div>
+    <div class="field">
+      <label>配信タイトル・イベント</label>
+      <input id="streamTitle" placeholder="例：夜の歌枠" />
+    </div>
+    <div class="row">
+      <div class="field">
+        <button type="button" id="commentedBtn" class="toggle-btn commented" onclick="toggleVisitFlag('commented')">💬気になるコメント</button>
+      </div>
+      <div class="field">
+        <button type="button" id="giftedBtn" class="toggle-btn gifted" onclick="toggleVisitFlag('gifted')">✨特別ギフト</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>話した内容・メモ</label>
+      <textarea id="visitNote" placeholder="今日話したこと、次に続けたい話題"></textarea>
+    </div>
+    <button class="btn" onclick="saveVisit()">記録する</button>
+  </div>
+</div>
+
+
+<div id="diaryModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><strong>配信日記</strong><button class="close" onclick="closeModal('diaryModal')">×</button></div>
+    <input type="hidden" id="diaryId">
+    <div class="field"><label>配信日</label><input id="diaryDate" type="date"></div>
+    <div class="row"><div class="field"><label>開始時間</label><input id="diaryStart" type="time"></div><div class="field"><label>終了時間</label><input id="diaryEnd" type="time"></div></div>
+    <div class="field"><label>配信内容</label><input id="diaryContent" placeholder="例：歌枠、雑談、イベント"></div>
+    <div class="field">
+      <label>アイコンカラー</label>
+      <div id="diaryColorChoices" class="color-choice-list"></div>
+    </div>
+    <div class="field"><label>何を話したか</label><textarea id="diaryTalk" placeholder="配信中に話した内容"></textarea></div>
+    <div class="field">
+      <div class="diary-people-head"><label style="margin:0">来てくれたリスナー</label><span id="diaryPeopleCount" class="diary-people-count"></span></div>
+      <input id="diaryPeopleSearch" class="search" placeholder="名前・呼び方で絞り込み" oninput="filterDiaryPeopleList()" style="margin-bottom:9px" />
+      <div id="diaryTagFilterBar"></div>
+      <button type="button" class="add-listener-btn" onclick="newListenerFromDiary()">＋ 新しいリスナーを登録して追加</button>
+      <div id="diaryPeople"></div>
+      <div class="hint">タグで絞り込み・名前検索で探しやすくできます。名前をタップで来訪に追加、✅出席・👏ないぱちはボタンでON/OFF。👏ないぱちを押すと✅出席も自動でONになります。📝記録でそのリスナーの来訪履歴に詳細を保存できます（保存すると✅出席も自動でONになります）。リストにいない人は「＋新しいリスナーを登録して追加」からその場で登録できます。</div>
+    </div>
+    <button class="btn" onclick="saveDiary()">保存する</button>
+  </div>
+</div>
+<script>
+const STORAGE_KEY = 'listenerManager_v1';
+let data = loadData();
+const DEFAULT_THEME_COLOR='#6f9f55';
+const DEFAULT_APP_TITLE='🎧 リスナーフレンドノート 📒';
+function hexToRgb(hex){
+  const h=hex.replace('#','');
+  const full=h.length===3?h.split('').map(c=>c+c).join(''):h;
+  const bigint=parseInt(full,16);
+  return {r:(bigint>>16)&255,g:(bigint>>8)&255,b:bigint&255};
+}
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}
+  else{
+    const d=max-min;
+    s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){
+      case r:h=(g-b)/d+(g<b?6:0);break;
+      case g:h=(b-r)/d+2;break;
+      default:h=(r-g)/d+4;
+    }
+    h/=6;
+  }
+  return {h:h*360,s:s*100,l:l*100};
+}
+function hslToRgb(h,s,l){
+  h/=360;s/=100;l/=100;
+  let r,g,b;
+  if(s===0){r=g=b=l;}
+  else{
+    const hue2rgb=(p,q,t)=>{
+      if(t<0)t+=1;if(t>1)t-=1;
+      if(t<1/6)return p+(q-p)*6*t;
+      if(t<1/2)return q;
+      if(t<2/3)return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q=l<0.5?l*(1+s):l+s-l*s;
+    const p=2*l-q;
+    r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);
+  }
+  return {r:r*255,g:g*255,b:b*255};
+}
+function shadeColor(hex,lightnessDelta){
+  const {r,g,b}=hexToRgb(hex);
+  const hsl=rgbToHsl(r,g,b);
+  const l=Math.max(8,Math.min(92,hsl.l+lightnessDelta));
+  const rgb=hslToRgb(hsl.h,hsl.s,l);
+  return rgbToHex(rgb.r,rgb.g,rgb.b);
+}
+function applyThemeColor(hex){
+  if(!hex)return;
+  const root=document.documentElement.style;
+  root.setProperty('--main',hex);
+  root.setProperty('--leaf',hex);
+  root.setProperty('--main2',shadeColor(hex,20));
+  root.setProperty('--wood',shadeColor(hex,-14));
+  root.setProperty('--accent',shadeColor(hex,-10));
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute('content',hex);
+}
+function applyAppTitle(title){
+  document.title=title;
+  const h1=document.getElementById('appTitle');
+  if(h1)h1.textContent=title;
+}
+function applyAndSaveThemeColor(hex){
+  data.settings=data.settings||{};
+  data.settings.themeColor=hex;
+  applyThemeColor(hex);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function resetThemeColor(){
+  data.settings=data.settings||{};
+  data.settings.themeColor='';
+  applyThemeColor(DEFAULT_THEME_COLOR);
+  const input=document.getElementById('themeColorInput');if(input)input.value=DEFAULT_THEME_COLOR;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function applyAndSaveAppTitle(title){
+  data.settings=data.settings||{};
+  data.settings.appTitle=title.trim();
+  applyAppTitle(title.trim()||DEFAULT_APP_TITLE);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function resetAppTitle(){
+  data.settings=data.settings||{};
+  data.settings.appTitle='';
+  applyAppTitle(DEFAULT_APP_TITLE);
+  const input=document.getElementById('appTitleInput');if(input)input.value='';
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+let selectedListenerTags = new Set();
+let selectedListenerColor='';
+const COLOR_PALETTE=['#e07b1a','#4f8b56','#2f6fed','#e0459a','#9a6b45','#c0392b','#7d5fc4','#1aa1a1'];
+function renderColorChoices(){
+  const box=document.getElementById('colorChoices');
+  if(!box)return;
+  box.innerHTML=`<button type="button" class="color-swatch none ${!selectedListenerColor?'selected':''}" onclick="selectListenerColor('')">なし</button>`+
+    COLOR_PALETTE.map(c=>`<button type="button" class="color-swatch ${selectedListenerColor===c?'selected':''}" style="background:${c}" onclick="selectListenerColor('${c}')"></button>`).join('');
+}
+function selectListenerColor(c){
+  selectedListenerColor=c;
+  renderColorChoices();
+}
+let selectedDiaryColor='';
+function renderDiaryColorChoices(){
+  const box=document.getElementById('diaryColorChoices');
+  if(!box)return;
+  box.innerHTML=`<button type="button" class="color-swatch none ${!selectedDiaryColor?'selected':''}" onclick="selectDiaryColor('')">なし</button>`+
+    COLOR_PALETTE.map(c=>`<button type="button" class="color-swatch ${selectedDiaryColor===c?'selected':''}" style="background:${c}" onclick="selectDiaryColor('${c}')"></button>`).join('');
+}
+function selectDiaryColor(c){
+  selectedDiaryColor=c;
+  renderDiaryColorChoices();
+}
+
+function loadData(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const d=saved ? JSON.parse(saved) : {listeners:[], visits:[], sort:'recent', diaries:[], tagMaster:['常連','人間','ペット','ライバー']};
+    d.diaries=d.diaries||[];
+    d.tagMaster=d.tagMaster||['常連','人間','ペット','ライバー'];
+    ['常連','人間','ペット','ライバー'].forEach(t=>{if(!d.tagMaster.includes(t))d.tagMaster.push(t)});
+    d.settings=d.settings||{};
+    return d;
+  }catch(e){
+    return {listeners:[], visits:[], sort:'recent', diaries:[], tagMaster:['常連','人間','ペット','ライバー'], settings:{}};
+  }
+}
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  renderAll();
+}
+function uid(prefix='id'){
+  return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);
+}
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function esc(s=''){
+  return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function formatDate(s){
+  if(!s) return '未記録';
+  const d=new Date(s+'T00:00:00');
+  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+}
+function listenerVisits(id){
+  return data.visits.filter(v=>v.listenerId===id).sort((a,b)=>b.date.localeCompare(a.date));
+}
+function lastVisit(id){
+  return listenerVisits(id)[0]?.date || '';
+}
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const target=document.getElementById(name+'View');if(!target)return;target.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  renderAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+let diaryReturnPending=false;
+let diaryTagFilter=null;
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+  if((id==='visitModal'||id==='listenerModal')&&diaryReturnPending){
+    diaryReturnPending=false;
+    document.getElementById('diaryModal').classList.add('show');
+  }
+}
+function openListenerForm(id=''){
+  document.getElementById('formTitle').textContent=id?'リスナー編集':'リスナー登録';
+  document.getElementById('listenerId').value=id;
+  const l=data.listeners.find(x=>x.id===id);
+  document.getElementById('listenerName').value=l?.name||'';
+  document.getElementById('nickname').value=l?.nickname||'';
+  document.getElementById('firstVisit').value=l?.firstVisit||todayStr();
+  const bp=getBirthdayParts(l); document.getElementById('birthMonth').value=bp?.month||''; document.getElementById('birthDay').value=bp?.day||'';
+  selectedListenerTags=new Set(l?.tags||[]);
+  renderListenerTagChoices();
+  selectedListenerColor=l?.color||'';
+  renderColorChoices();
+  document.getElementById('likes').value=l?.likes||'';
+  document.getElementById('nextMemo').value=l?.nextMemo||'';
+  document.getElementById('listenerMemo').value=l?.memo||'';
+  document.getElementById('listenerModal').classList.add('show');
+}
+
+function renderListenerTagChoices(){
+  const box=document.getElementById('listenerTagChoices');
+  if(!box)return;
+  box.innerHTML=(data.tagMaster||[]).map(tag=>`<button type="button" class="tag-choice ${selectedListenerTags.has(tag)?'selected':''}" onclick="toggleListenerTag('${encodeURIComponent(tag)}')">${esc(tag)}</button>`).join('');
+}
+function toggleListenerTag(encoded){
+  const tag=decodeURIComponent(encoded);
+  selectedListenerTags.has(tag)?selectedListenerTags.delete(tag):selectedListenerTags.add(tag);
+  renderListenerTagChoices();
+}
+function addListenerTagCandidate(){
+  const input=document.getElementById('newListenerTag');
+  const tag=input.value.trim();
+  if(!tag)return;
+  data.tagMaster=data.tagMaster||[];
+  if(!data.tagMaster.includes(tag))data.tagMaster.push(tag);
+  selectedListenerTags.add(tag);
+  input.value='';
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  renderListenerTagChoices();
+}
+
+function saveListener(){
+  const id=document.getElementById('listenerId').value;
+  const name=document.getElementById('listenerName').value.trim();
+  if(!name){alert('リスナー名を入力してください');return}
+  const isNew=!id;
+  const obj={
+    id:id||uid('l'),
+    name,
+    nickname:document.getElementById('nickname').value.trim(),
+    firstVisit:document.getElementById('firstVisit').value,
+    birthMonth:document.getElementById('birthMonth').value,birthDay:document.getElementById('birthDay').value,birthday:'',
+    tags:[...selectedListenerTags],
+    color:selectedListenerColor,
+    likes:document.getElementById('likes').value.trim(),
+    nextMemo:document.getElementById('nextMemo').value.trim(),
+    memo:document.getElementById('listenerMemo').value.trim(),
+    createdAt:id?(data.listeners.find(x=>x.id===id)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
+  if(id){
+    data.listeners=data.listeners.map(x=>x.id===id?obj:x);
+  }else{
+    data.listeners.push(obj);
+  }
+  if(isNew&&diaryReturnPending)addListenerRowToDiary(obj);
+  closeModal('listenerModal');
+  persist();
+}
+function deleteListener(id){
+  const l=data.listeners.find(x=>x.id===id);
+  if(!confirm(`${l?.name||'このリスナー'}を削除しますか？\n来訪履歴も削除されます。`)) return;
+  data.listeners=data.listeners.filter(x=>x.id!==id);
+  data.visits=data.visits.filter(v=>v.listenerId!==id);
+  closeModal('detailModal');
+  persist();
+}
+function openVisitForm(id, date=todayStr(), streamTitle=''){
+  document.getElementById('visitListenerId').value=id;
+  document.getElementById('visitDate').value=date;
+  document.getElementById('streamTitle').value=streamTitle;
+  document.getElementById('commentedBtn').classList.remove('active');
+  document.getElementById('giftedBtn').classList.remove('active');
+  document.getElementById('visitNote').value='';
+  checkVisitDateExisting();
+  document.getElementById('visitModal').classList.add('show');
+}
+function checkVisitDateExisting(){
+  const id=document.getElementById('visitListenerId').value;
+  const date=document.getElementById('visitDate').value;
+  const existing=data.visits.find(v=>v.listenerId===id&&v.date===date);
+  const hint=document.getElementById('visitEditHint');
+  if(hint)hint.style.display=existing?'block':'none';
+  if(existing){
+    document.getElementById('streamTitle').value=existing.streamTitle||'';
+    document.getElementById('commentedBtn').classList.toggle('active',!!existing.commented);
+    document.getElementById('giftedBtn').classList.toggle('active',!!existing.gifted);
+    document.getElementById('visitNote').value=existing.note||'';
+  }
+}
+function toggleVisitFlag(field){
+  const btn=document.getElementById(field+'Btn');
+  if(!btn)return;
+  btn.classList.toggle('active');
+}
+function saveVisit(){
+  const listenerId=document.getElementById('visitListenerId').value;
+  const date=document.getElementById('visitDate').value||todayStr();
+  const streamTitle=document.getElementById('streamTitle').value.trim();
+  const commented=document.getElementById('commentedBtn').classList.contains('active');
+  const gifted=document.getElementById('giftedBtn').classList.contains('active');
+  const note=document.getElementById('visitNote').value.trim();
+  const existing=data.visits.find(v=>v.listenerId===listenerId&&v.date===date);
+  if(existing){
+    existing.streamTitle=streamTitle;
+    existing.commented=commented;
+    existing.gifted=gifted;
+    existing.note=note;
+    existing.updatedAt=new Date().toISOString();
+  }else{
+    data.visits.push({
+      id:uid('v'),
+      listenerId,
+      date,
+      streamTitle,
+      commented,
+      gifted,
+      note,
+      createdAt:new Date().toISOString()
+    });
+  }
+  if(diaryReturnPending)markDiaryAttendeeRecorded(listenerId);
+  closeModal('visitModal');
+  persist();
+}
+function toggleToday(id){
+  const t=todayStr();
+  const found=data.visits.find(v=>v.listenerId===id&&v.date===t);
+  if(found){
+    if(confirm('今日の来訪記録を取り消しますか？')){
+      data.visits=data.visits.filter(v=>v.id!==found.id);
+      persist();
+    }
+  }else{
+    data.visits.push({id:uid('v'),listenerId:id,date:t,streamTitle:'',commented:false,gifted:false,note:'',createdAt:new Date().toISOString()});
+    persist();
+  }
+}
+function sortedListeners(list=[...data.listeners]){
+  const sort=document.getElementById('sortSelect')?.value||data.sort||'recent';
+  if(sort==='name') return list.sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+  if(sort==='count') return list.sort((a,b)=>listenerVisits(b.id).length-listenerVisits(a.id).length||a.name.localeCompare(b.name,'ja'));
+  return list.sort((a,b)=>(lastVisit(b.id)||'0000').localeCompare(lastVisit(a.id)||'0000')||a.name.localeCompare(b.name,'ja'));
+}
+let activeTagFilter=null;
+function monthlyAttendanceBreakdown(visits){
+  const month=todayStr().slice(0,7);
+  const monthly=visits.filter(v=>v.date.startsWith(month));
+  let early=0,mid=0,late=0;
+  monthly.forEach(v=>{
+    const day=Number(v.date.slice(8,10));
+    if(day<=10)early++;else if(day<=20)mid++;else late++;
+  });
+  return {early,mid,late};
+}
+function listenerCard(l){
+  const visits=listenerVisits(l.id);
+  const last=visits[0]?.date;
+  const {early,mid,late}=monthlyAttendanceBreakdown(visits);
+  return `<div class="listener">
+    <div class="avatar" style="${l.color?`background:${l.color}`:''}">${esc((l.nickname||l.name).slice(0,1))}</div>
+    <div class="listener-main" onclick="showDetail('${l.id}')">
+      <div class="listener-name">${esc(l.name)}${l.nickname?` <small>（${esc(l.nickname)}）</small>`:''}</div>
+      <div class="listener-meta">最終来訪：${last?formatDate(last):'未記録'} ／ 累計 ${visits.length}回</div>
+      <div class="listener-meta">今月の出席：上旬${early}回／中旬${mid}回／下旬${late}回</div>
+      ${l.tags?.length?`<div class="tags">${l.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    </div>
+    <button class="mini-btn" onclick="openVisitForm('${l.id}')">記録</button>
+  </div>`;
+}
+function filterByTag(encoded){
+  const tag=decodeURIComponent(encoded);
+  activeTagFilter=activeTagFilter===tag?null:tag;
+  renderListenerList();
+}
+function clearTagFilter(){
+  activeTagFilter=null;
+  renderListenerList();
+}
+function showDetail(id){
+  const l=data.listeners.find(x=>x.id===id);
+  if(!l)return;
+  const visits=listenerVisits(id);
+  const month=todayStr().slice(0,7);
+  const monthCount=visits.filter(v=>v.date.startsWith(month)).length;
+  document.getElementById('detailContent').innerHTML=`
+    <div class="detail-big">${esc(l.name)}</div>
+    <div class="sub">${l.nickname?`呼び方：${esc(l.nickname)} ／ `:''}初回来訪：${formatDate(l.firstVisit)}</div>
+    <div class="grid" style="margin-top:12px">
+      <div class="stat"><div class="n">${visits.length}</div><div class="label">累計来訪</div></div>
+      <div class="stat"><div class="n">${monthCount}</div><div class="label">今月の来訪</div></div>
+    </div>
+    ${l.nextMemo?`<div class="note-box"><strong>次に話すメモ</strong><br>${esc(l.nextMemo)}</div>`:''}
+    ${l.likes?`<div class="card" style="box-shadow:none;margin-top:10px"><strong>好きな歌・話題</strong><div style="margin-top:5px;white-space:pre-wrap">${esc(l.likes)}</div></div>`:''}
+    ${l.memo?`<div class="card" style="box-shadow:none"><strong>自由メモ</strong><div style="margin-top:5px;white-space:pre-wrap">${esc(l.memo)}</div></div>`:''}
+    <div class="toolbar" style="margin:12px 0">
+      <button class="mini-btn" onclick="openVisitForm('${l.id}')">来訪記録</button>
+      <button class="mini-btn" onclick="closeModal('detailModal');openListenerForm('${l.id}')">編集</button>
+      <button class="mini-btn" style="color:var(--danger);background:#fff0f3" onclick="deleteListener('${l.id}')">削除</button>
+    </div>
+    <h3>来訪履歴</h3>
+    ${visits.length?visits.map(v=>`
+      <div class="history-item">
+        <div class="history-date">${formatDate(v.date)}${v.streamTitle?` ／ ${esc(v.streamTitle)}`:''}</div>
+        <div>${v.commented?'💬 コメント ':''}${v.gifted?'🎁 ギフト':''}</div>
+        ${v.note?`<div class="history-note">${esc(v.note)}</div>`:''}
+      </div>`).join(''):'<div class="empty">来訪履歴はありません</div>'}
+  `;
+  document.getElementById('detailModal').classList.add('show');
+}
+function renderAll(){
+  const month=String(new Date().getMonth()+1);
+  const birthdays=data.listeners.filter(l=>{const p=getBirthdayParts(l);return p&&p.month===Number(month)});
+  const totalEl=document.getElementById('totalListeners');if(totalEl)totalEl.textContent=data.listeners.length;
+  const birthdayEl=document.getElementById('birthdayCount');if(birthdayEl)birthdayEl.textContent=birthdays.length;
+
+  const recentCutoff=new Date();
+  recentCutoff.setHours(0,0,0,0);
+  recentCutoff.setDate(recentCutoff.getDate()-2);
+  const recentCutoffStr=recentCutoff.toISOString();
+  const recent=[...data.listeners].filter(l=>l.createdAt&&l.createdAt>=recentCutoffStr).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  const recentEl=document.getElementById('recentListeners');
+  if(recentEl)recentEl.innerHTML=recent.length?recent.map(listenerCard).join(''):'<div class="empty">直近3日で登録されたリスナーはいません</div>';
+
+  const upcoming=[...data.listeners].map(l=>({l,days:daysUntilBirthday(l)})).filter(x=>x.days!==null&&x.days<=31).sort((a,b)=>a.days-b.days).map(x=>x.l).slice(0,5);
+  const birthdayListEl=document.getElementById('birthdayList');
+  if(birthdayListEl)birthdayListEl.innerHTML=upcoming.length?upcoming.map(listenerCard).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
+
+  renderListenerList();
+  renderTagMasterList();
+}
+function renderListenerList(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  let list=sortedListeners().filter(l=>[l.name,l.nickname,(l.tags||[]).join(' ')].join(' ').toLowerCase().includes(q));
+  if(activeTagFilter)list=list.filter(l=>(l.tags||[]).includes(activeTagFilter));
+  renderTagFilterRow();
+  document.getElementById('listenerList').innerHTML=list.length?list.map(listenerCard).join(''):'<div class="empty">該当するリスナーがいません</div>';
+}
+function renderTagFilterRow(){
+  const bar=document.getElementById('tagFilterBar');
+  if(!bar)return;
+  const tags=data.tagMaster||[];
+  if(!tags.length){bar.innerHTML='';bar.className='';return;}
+  bar.className='tag-filter-row';
+  bar.innerHTML=`<button type="button" class="tag-filter-chip ${!activeTagFilter?'active':''}" onclick="clearTagFilter()">すべて</button>`+
+    tags.map(t=>`<button type="button" class="tag-filter-chip ${activeTagFilter===t?'active':''}" onclick="filterByTag('${encodeURIComponent(t)}')">${esc(t)}</button>`).join('');
+}
+function renderTodayList(){
+  const q=(document.getElementById('todaySearch')?.value||'').toLowerCase();
+  const t=todayStr();
+  const list=sortedListeners().filter(l=>[l.name,l.nickname,(l.tags||[]).join(' ')].join(' ').toLowerCase().includes(q));
+  document.getElementById('todayListenerList').innerHTML=list.length?list.map(l=>{
+    const checked=data.visits.some(v=>v.listenerId===l.id&&v.date===t);
+    return `<button class="today-chip ${checked?'checked':''}" onclick="toggleToday('${l.id}')">${checked?'✓ ':''}${esc(l.name)}</button>`;
+  }).join(''):'<div class="empty">リスナーが登録されていません</div>';
+}
+function renderTagMasterList(){
+  const el=document.getElementById('tagMasterList');if(!el)return;
+  const tags=data.tagMaster||[];
+  el.innerHTML=tags.length?tags.map(tag=>`<button type="button" class="tag-choice selected" onclick="deleteMasterTag('${encodeURIComponent(tag)}')">${esc(tag)} ×</button>`).join(''):'<div class="empty">タグ候補がありません</div>';
+}
+function addMasterTag(){
+  const input=document.getElementById('newMasterTag');
+  const tag=input.value.trim();if(!tag)return;
+  data.tagMaster=data.tagMaster||[];
+  if(data.tagMaster.includes(tag)){alert('同じタグがすでにあります');return;}
+  data.tagMaster.push(tag);input.value='';persist();
+}
+function deleteMasterTag(encoded){
+  const tag=decodeURIComponent(encoded);
+  if(!confirm(`タグ「${tag}」を候補から削除しますか？`))return;
+  data.tagMaster=(data.tagMaster||[]).filter(x=>x!==tag);
+  persist();
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`listener_manager_${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+document.getElementById('importFile').addEventListener('change',e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const imported=JSON.parse(r.result);
+      if(!imported.listeners||!imported.visits) throw new Error();
+      if(confirm('現在のデータを読み込んだデータで置き換えますか？')){
+        data=imported;
+        persist();
+      }
+    }catch(err){alert('読み込めないJSONファイルです')}
+    e.target.value='';
+  };
+  r.readAsText(file);
+});
+function resetAllData(){
+  if(confirm('本当に全データを削除しますか？\n元に戻せません。')){
+    data={listeners:[],visits:[],sort:'recent',diaries:[],tagMaster:['常連','人間','ペット','ライバー'],settings:{}};
+    applyThemeColor(DEFAULT_THEME_COLOR);
+    applyAppTitle(DEFAULT_APP_TITLE);
+    const themeInput=document.getElementById('themeColorInput');if(themeInput)themeInput.value=DEFAULT_THEME_COLOR;
+    const titleInput=document.getElementById('appTitleInput');if(titleInput)titleInput.value='';
+    persist();
+  }
+}
+document.getElementById('searchInput').addEventListener('input',renderListenerList);
+
+document.getElementById('sortSelect').addEventListener('change',e=>{data.sort=e.target.value;persist()});
+document.getElementById('sortSelect').value=data.sort||'recent';
+applyThemeColor(data.settings?.themeColor||DEFAULT_THEME_COLOR);
+applyAppTitle(data.settings?.appTitle||DEFAULT_APP_TITLE);
+document.getElementById('themeColorInput').value=data.settings?.themeColor||DEFAULT_THEME_COLOR;
+document.getElementById('appTitleInput').value=data.settings?.appTitle||'';
+for(let i=1;i<=12;i++)document.getElementById('birthMonth').insertAdjacentHTML('beforeend',`<option value="${i}">${i}月</option>`);
+for(let i=1;i<=31;i++)document.getElementById('birthDay').insertAdjacentHTML('beforeend',`<option value="${i}">${i}日</option>`);
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
+
+function openDiaryForm(id=''){
+  const d=(data.diaries||[]).find(x=>x.id===id);
+  document.getElementById('diaryId').value=id;
+  document.getElementById('diaryDate').value=d?.date||todayStr();
+  document.getElementById('diaryStart').value=d?.start||'';
+  document.getElementById('diaryEnd').value=d?.end||'';
+  document.getElementById('diaryContent').value=d?.content||'';
+  document.getElementById('diaryTalk').value=d?.talk||'';
+  selectedDiaryColor=d?.color||'';
+  renderDiaryColorChoices();
+  document.getElementById('diaryPeopleSearch').value='';
+  diaryTagFilter=null;
+  const old={}; (d?.people||[]).forEach(x=>old[x.listenerId]=x);
+  const sorted=data.listeners.slice().sort((a,b)=>{
+    const sa=old[a.id]?.selected?0:1, sb=old[b.id]?.selected?0:1;
+    return sa-sb||a.name.localeCompare(b.name,'ja');
+  });
+  document.getElementById('diaryPeople').innerHTML=sorted.length?sorted.map(l=>{
+    const x=old[l.id]||{};
+    const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
+    const tags=esc((l.tags||[]).join('|'));
+    return `<div class="attendee-row ${x.selected?'is-selected':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
+      <button type="button" class="attendee-name ${x.selected?'selected':''}" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
+      <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
+      <button type="button" class="flag-btn attend ${x.attended?'active attend':''}" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
+      <button type="button" class="flag-btn pachi ${x.naipachi?'active pachi':''}" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
+    </div>`;
+  }).join(''):'<div class="empty">先にリスナーを登録してください</div>';
+  renderDiaryTagFilterRow();
+  updateDiaryPeopleCount();
+  document.getElementById('diaryModal').classList.add('show');
+}
+function renderDiaryTagFilterRow(){
+  const bar=document.getElementById('diaryTagFilterBar');
+  if(!bar)return;
+  const tags=data.tagMaster||[];
+  if(!tags.length){bar.innerHTML='';bar.className='';return;}
+  bar.className='tag-filter-row';
+  bar.innerHTML=`<button type="button" class="tag-filter-chip ${!diaryTagFilter?'active':''}" onclick="clearDiaryTagFilter()">すべて</button>`+
+    tags.map(t=>`<button type="button" class="tag-filter-chip ${diaryTagFilter===t?'active':''}" onclick="filterDiaryByTag('${encodeURIComponent(t)}')">${esc(t)}</button>`).join('');
+}
+function filterDiaryByTag(encoded){
+  const tag=decodeURIComponent(encoded);
+  diaryTagFilter=diaryTagFilter===tag?null:tag;
+  renderDiaryTagFilterRow();
+  filterDiaryPeopleList();
+}
+function clearDiaryTagFilter(){
+  diaryTagFilter=null;
+  renderDiaryTagFilterRow();
+  filterDiaryPeopleList();
+}
+function newListenerFromDiary(){
+  diaryReturnPending=true;
+  document.getElementById('diaryModal').classList.remove('show');
+  openListenerForm('');
+}
+function addListenerRowToDiary(l){
+  const container=document.getElementById('diaryPeople');
+  if(!container)return;
+  const emptyEl=container.querySelector('.empty');
+  if(emptyEl)emptyEl.remove();
+  const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
+  const tags=esc((l.tags||[]).join('|'));
+  const html=`<div class="attendee-row is-selected" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
+      <button type="button" class="attendee-name selected" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
+      <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
+      <button type="button" class="flag-btn attend active attend" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
+      <button type="button" class="flag-btn pachi" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
+    </div>`;
+  container.insertAdjacentHTML('afterbegin',html);
+  updateDiaryPeopleCount();
+}
+function recordVisitFromDiary(id){
+  diaryReturnPending=true;
+  document.getElementById('diaryModal').classList.remove('show');
+  const date=document.getElementById('diaryDate').value||todayStr();
+  const title=document.getElementById('diaryContent').value.trim();
+  openVisitForm(id,date,title);
+}
+function markDiaryAttendeeRecorded(listenerId){
+  const row=document.querySelector(`#diaryPeople .attendee-row[data-id="${listenerId}"]`);
+  if(!row)return;
+  row.querySelector('[data-role="person"]').classList.add('selected');
+  row.querySelector('[data-role="attend"]').classList.add('active');
+  row.classList.add('is-selected');
+  updateDiaryPeopleCount();
+}
+function toggleDiaryFlag(id,role){
+  const row=document.querySelector(`#diaryPeople .attendee-row[data-id="${id}"]`);
+  if(!row)return;
+  const nameBtn=row.querySelector('[data-role="person"]');
+  const attendBtn=row.querySelector('[data-role="attend"]');
+  const pachiBtn=row.querySelector('[data-role="pachi"]');
+  let selected=nameBtn.classList.contains('selected');
+  let attended=attendBtn.classList.contains('active');
+  let naipachi=pachiBtn.classList.contains('active');
+  if(role==='person'){
+    selected=!selected;
+    if(!selected){attended=false;naipachi=false;}
+  }else if(role==='attend'){
+    attended=!attended;
+    if(attended)selected=true;
+    else naipachi=false;
+  }else if(role==='pachi'){
+    naipachi=!naipachi;
+    if(naipachi){attended=true;selected=true;}
+  }
+  nameBtn.classList.toggle('selected',selected);
+  attendBtn.classList.toggle('active',attended);
+  pachiBtn.classList.toggle('active',naipachi);
+  row.classList.toggle('is-selected',selected);
+  updateDiaryPeopleCount();
+}
+function filterDiaryPeopleList(){
+  const q=(document.getElementById('diaryPeopleSearch')?.value||'').toLowerCase();
+  document.querySelectorAll('#diaryPeople .attendee-row').forEach(row=>{
+    const matchesSearch=row.dataset.search.includes(q);
+    const rowTags=(row.dataset.tags||'').split('|').filter(Boolean);
+    const matchesTag=!diaryTagFilter||rowTags.includes(diaryTagFilter);
+    row.style.display=(matchesSearch&&matchesTag)?'':'none';
+  });
+}
+function updateDiaryPeopleCount(){
+  const el=document.getElementById('diaryPeopleCount');if(!el)return;
+  const n=document.querySelectorAll('#diaryPeople .attendee-name.selected').length;
+  el.textContent=n?`選択中：${n}人`:'';
+}
+function saveDiary(){
+  const id=document.getElementById('diaryId').value;
+  const people=[...document.querySelectorAll('#diaryPeople .attendee-row')]
+    .filter(row=>row.querySelector('[data-role="person"]').classList.contains('selected'))
+    .map(row=>({
+      listenerId:row.dataset.id,
+      selected:true,
+      attended:row.querySelector('[data-role="attend"]').classList.contains('active'),
+      naipachi:row.querySelector('[data-role="pachi"]').classList.contains('active')
+    }));
+  const obj={id:id||uid('d'),date:document.getElementById('diaryDate').value||todayStr(),start:document.getElementById('diaryStart').value,end:document.getElementById('diaryEnd').value,content:document.getElementById('diaryContent').value.trim(),talk:document.getElementById('diaryTalk').value.trim(),color:selectedDiaryColor,people};
+  data.diaries=data.diaries||[];
+  if(id)data.diaries=data.diaries.map(x=>x.id===id?obj:x);else data.diaries.push(obj);
+  syncDiaryAttendanceToVisits(obj);
+  closeModal('diaryModal');persist();
+}
+function syncDiaryAttendanceToVisits(d){
+  (d.people||[]).filter(p=>p.attended).forEach(p=>{
+    const existing=data.visits.find(v=>v.listenerId===p.listenerId&&v.date===d.date);
+    if(existing){
+      if(!existing.streamTitle&&d.content)existing.streamTitle=d.content;
+      if(d.talk&&!(existing.note||'').includes(d.talk)){
+        existing.note=existing.note?`${existing.note}\n${d.talk}`:d.talk;
+      }
+      existing.updatedAt=new Date().toISOString();
+    }else{
+      data.visits.push({
+        id:uid('v'),
+        listenerId:p.listenerId,
+        date:d.date,
+        streamTitle:d.content||'',
+        commented:false,
+        gifted:false,
+        note:d.talk||'',
+        createdAt:new Date().toISOString()
+      });
+    }
+  });
+}
+function renderDiaries(){
+  const q=(document.getElementById('diarySearch')?.value||'').toLowerCase();
+  const month=document.getElementById('diaryMonthFilter')?.value||'';
+  let list=(data.diaries||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
+  if(month)list=list.filter(d=>d.date.startsWith(month));
+  if(q){
+    list=list.filter(d=>{
+      const peopleNames=d.people.map(p=>{
+        const l=data.listeners.find(x=>x.id===p.listenerId);
+        return l?(l.name+' '+(l.nickname||'')):'';
+      }).join(' ');
+      return [d.content,d.talk,peopleNames].join(' ').toLowerCase().includes(q);
+    });
+  }
+  const el=document.getElementById('diaryList'); if(!el)return;
+  el.innerHTML=list.length?list.map(d=>`<div class="listener" onclick="openDiaryForm('${d.id}')"><div class="avatar" style="${d.color?`background:${d.color}`:''}">📒</div><div class="listener-main"><div class="listener-name">${formatDate(d.date)} ${esc(d.content||'配信')}</div><div class="listener-meta">${d.start||'--:--'}～${d.end||'--:--'} ／ 来訪 ${d.people.length}人 ／ ✅出席 ${d.people.filter(x=>x.attended).length}人 ／ 👏ないぱち ${d.people.filter(x=>x.naipachi).length}人</div>${d.talk?`<div class="listener-meta">${esc(d.talk)}</div>`:''}</div></div>`).join(''):'<div class="empty">該当する配信日記がありません</div>';
+}
+function clearDiaryFilters(){
+  const s=document.getElementById('diarySearch');if(s)s.value='';
+  const m=document.getElementById('diaryMonthFilter');if(m)m.value='';
+  renderDiaries();
+}
+
+let calendarCursor=new Date();
+calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
+function getBirthdayParts(l){
+  if(!l)return null;
+  if(l.birthMonth&&l.birthDay)return{month:Number(l.birthMonth),day:Number(l.birthDay)};
+  if(l.birthday){const m=String(l.birthday).match(/(?:\d{4}-)?(\d{2})-(\d{2})$/);if(m)return{month:Number(m[1]),day:Number(m[2])};}
+  return null;
+}
+function validBirthdayThisYear(l,year){
+  const p=getBirthdayParts(l);if(!p)return null;
+  const d=new Date(year,p.month-1,p.day);
+  if(d.getMonth()!==p.month-1||d.getDate()!==p.day)return null;
+  return d;
+}
+function daysUntilBirthday(l,base=new Date()){
+  const start=new Date(base.getFullYear(),base.getMonth(),base.getDate());
+  let d=validBirthdayThisYear(l,start.getFullYear());if(!d)return null;
+  if(d<start)d=validBirthdayThisYear(l,start.getFullYear()+1);
+  return Math.round((d-start)/86400000);
+}
+function renderBirthdayAlerts(){
+  const el=document.getElementById('birthdayAlerts');if(!el)return;
+  const todayPeople=data.listeners.filter(l=>daysUntilBirthday(l)===0);
+  const tomorrowPeople=data.listeners.filter(l=>daysUntilBirthday(l)===1);
+  const block=(title,list,cls)=>`<div class="birthday-alert ${cls}"><strong>${title}</strong><div style="margin-top:6px">${list.length?list.map(l=>`<button class="mini-btn" style="margin:3px" onclick="showDetail('${l.id}')">${esc(l.name)}</button>`).join(''):'該当する人はいません'}</div></div>`;
+  el.innerHTML=block('🎉 本日誕生日',todayPeople,'today')+block('🎁 明日誕生日',tomorrowPeople,'tomorrow');
+}
+function changeCalendarMonth(n){calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+n,1);renderBirthdayCalendar()}
+function renderBirthdayCalendar(){
+  const wrap=document.getElementById('birthdayCalendar');if(!wrap)return;
+  const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();
+  document.getElementById('calendarTitle').textContent=`${y}年 ${m+1}月`;
+  const firstDay=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();
+  const todayD=new Date();
+  let html='<div class="calendar-grid">'+['日','月','火','水','木','金','土'].map(x=>`<div class="calendar-week">${x}</div>`).join('');
+  for(let i=0;i<firstDay;i++)html+='<div class="calendar-day empty-day"></div>';
+  for(let day=1;day<=last;day++){
+    const people=data.listeners.filter(l=>{const p=getBirthdayParts(l);return p&&p.month===m+1&&p.day===day});
+    const isToday=todayD.getFullYear()===y&&todayD.getMonth()===m&&todayD.getDate()===day;
+    html+=`<div class="calendar-day ${isToday?'today-day today':''}"><div class="day-number">${day}</div>${people.map(l=>`<span class="birthday-name" style="${l.color?`background:${l.color}`:''}" onclick="showDetail('${l.id}')">🎂 ${esc(l.name)}</span>`).join('')}</div>`;
+  }
+  html+='</div>';wrap.innerHTML=html;
+  renderUpcomingBirthdays();
+}
+function renderUpcomingBirthdays(){
+  const el=document.getElementById('upcomingBirthdays');if(!el)return;
+  const list=data.listeners.map(l=>({l,days:daysUntilBirthday(l)})).filter(x=>x.days!==null&&x.days<=31).sort((a,b)=>a.days-b.days||a.l.name.localeCompare(b.l.name,'ja')).slice(0,10);
+  el.innerHTML=list.length?list.map(x=>{const p=getBirthdayParts(x.l);const label=x.days===0?'本日':x.days===1?'明日':`あと${x.days}日`;return `<div class="upcoming-row" onclick="showDetail('${x.l.id}')"><div class="days-badge">${label}</div><div><strong>${esc(x.l.name)}</strong><div class="meta">🎂 ${p.month}月${p.day}日</div></div></div>`}).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
+}
+const _oldRenderAll=renderAll; renderAll=function(){_oldRenderAll();renderDiaries();renderBirthdayAlerts();renderBirthdayCalendar();};
+renderAll();
+</script>
+</body>
+</html>
