@@ -69,6 +69,8 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .attendee-name{flex:1 1 130px;min-width:90px;border:none;border-radius:12px;padding:10px 11px;background:#f4eef2;color:var(--text);font-weight:800;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:none}
 .attendee-name.selected{background:linear-gradient(135deg,var(--leaf),var(--main2));color:#fff}
 .record-btn{flex:0 0 auto;border:1px solid #cfd9f2;border-radius:999px;padding:8px 12px;background:#eef2fb;color:#3f5fa8;font-size:12px;font-weight:800}
+.record-btn.recorded{background:#2f6fed;color:#fff;border-color:#2f6fed;box-shadow:0 3px 8px rgba(47,111,237,.3)}
+.attendee-row.is-recorded .attendee-name{border:2px solid #2f6fed}
 .flag-btn{transition:background .15s,color .15s}
 #diaryPeople .empty{padding:14px 4px}
 </style>
@@ -867,11 +869,13 @@ function openDiaryForm(id=''){
   });
   document.getElementById('diaryPeople').innerHTML=sorted.length?sorted.map(l=>{
     const x=old[l.id]||{};
+    const diaryDate=d?.date||todayStr();
+    const recorded=data.visits.some(v=>v.listenerId===l.id&&v.date===diaryDate&&(v.commented||v.gifted||(v.note||'').trim()));
     const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
     const tags=esc((l.tags||[]).join('|'));
-    return `<div class="attendee-row ${x.selected?'is-selected':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
+    return `<div class="attendee-row ${x.selected?'is-selected':''} ${recorded?'is-recorded':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
       <button type="button" class="attendee-name ${x.selected?'selected':''}" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
-      <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
+      <button type="button" class="record-btn ${recorded?'recorded':''}" onclick="recordVisitFromDiary('${l.id}')">${recorded?'📝記録':'📝記録'}</button>
       <button type="button" class="flag-btn attend ${x.attended?'active attend':''}" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
       <button type="button" class="flag-btn pachi ${x.naipachi?'active pachi':''}" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
     </div>`;
@@ -933,6 +937,14 @@ function markDiaryAttendeeRecorded(listenerId){
   if(!row)return;
   row.querySelector('[data-role="person"]').classList.add('selected');
   row.querySelector('[data-role="attend"]').classList.add('active');
+  const recordBtn=row.querySelector('.record-btn');
+  const visit=data.visits.find(v=>v.listenerId===listenerId&&v.date===(document.getElementById('visitDate')?.value||document.getElementById('diaryDate')?.value||todayStr()));
+  const hasDetails=!!(visit&&(visit.commented||visit.gifted||(visit.note||'').trim()));
+  if(recordBtn){
+    recordBtn.classList.toggle('recorded',hasDetails);
+    recordBtn.textContent=hasDetails?'📝記録':'📝記録';
+  }
+  row.classList.toggle('is-recorded',hasDetails);
   row.classList.add('is-selected');
   updateDiaryPeopleCount();
 }
