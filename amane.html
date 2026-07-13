@@ -59,6 +59,20 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .calendar-day{overflow:visible;min-width:0}
 .calendar-day.today-day{outline:2px solid var(--leaf);background:#eef5e8}
 .calendar-day .birthday-name{background:var(--wood);cursor:pointer}
+
+.upcoming-groups{display:flex;flex-direction:column;gap:12px}
+.upcoming-group-title{font-size:13px;font-weight:900;color:var(--wood);margin:2px 0 6px;padding-left:3px}
+.upcoming-row{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 3px 10px rgba(112,87,58,.08);cursor:pointer}
+.upcoming-row + .upcoming-row{margin-top:8px}
+.days-badge{flex:0 0 64px;text-align:center;border-radius:13px;padding:9px 5px;font-size:12px;font-weight:900;line-height:1.25}
+.days-badge.today{background:#e7f5e2;color:#3f7f49;border:1px solid #bcd8b6}
+.days-badge.tomorrow{background:#fff0df;color:#b86b11;border:1px solid #e8c79d}
+.days-badge.week{background:#eef2fb;color:#2f6fed;border:1px solid #cfd9f2}
+.days-badge.later{background:#f3ede7;color:var(--wood);border:1px solid #d9c6b4}
+.upcoming-info{min-width:0;flex:1}
+.upcoming-info strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upcoming-info .birthday-date{font-size:12px;color:var(--muted);margin-top:3px}
+.upcoming-info .birthday-note{font-size:11px;color:var(--main);font-weight:800;margin-top:3px}
 @media(max-width:430px){.tag-add-row{grid-template-columns:1fr}.birthday-selects{grid-template-columns:1fr 1fr}}
 
 .diary-people-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
@@ -69,6 +83,8 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .attendee-name{flex:1 1 130px;min-width:90px;border:none;border-radius:12px;padding:10px 11px;background:#f4eef2;color:var(--text);font-weight:800;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:none}
 .attendee-name.selected{background:linear-gradient(135deg,var(--leaf),var(--main2));color:#fff}
 .record-btn{flex:0 0 auto;border:1px solid #cfd9f2;border-radius:999px;padding:8px 12px;background:#eef2fb;color:#3f5fa8;font-size:12px;font-weight:800}
+.record-btn.recorded{background:#2f6fed;color:#fff;border-color:#2f6fed;box-shadow:0 3px 8px rgba(47,111,237,.3)}
+.attendee-row.is-recorded .attendee-name{border:2px solid #2f6fed}
 .flag-btn{transition:background .15s,color .15s}
 #diaryPeople .empty{padding:14px 4px}
 </style>
@@ -867,11 +883,13 @@ function openDiaryForm(id=''){
   });
   document.getElementById('diaryPeople').innerHTML=sorted.length?sorted.map(l=>{
     const x=old[l.id]||{};
+    const diaryDate=d?.date||todayStr();
+    const recorded=data.visits.some(v=>v.listenerId===l.id&&v.date===diaryDate&&(v.commented||v.gifted||(v.note||'').trim()));
     const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
     const tags=esc((l.tags||[]).join('|'));
-    return `<div class="attendee-row ${x.selected?'is-selected':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
+    return `<div class="attendee-row ${x.selected?'is-selected':''} ${recorded?'is-recorded':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
       <button type="button" class="attendee-name ${x.selected?'selected':''}" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
-      <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
+      <button type="button" class="record-btn ${recorded?'recorded':''}" onclick="recordVisitFromDiary('${l.id}')">${recorded?'📝記録':'📝記録'}</button>
       <button type="button" class="flag-btn attend ${x.attended?'active attend':''}" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
       <button type="button" class="flag-btn pachi ${x.naipachi?'active pachi':''}" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
     </div>`;
@@ -933,6 +951,14 @@ function markDiaryAttendeeRecorded(listenerId){
   if(!row)return;
   row.querySelector('[data-role="person"]').classList.add('selected');
   row.querySelector('[data-role="attend"]').classList.add('active');
+  const recordBtn=row.querySelector('.record-btn');
+  const visit=data.visits.find(v=>v.listenerId===listenerId&&v.date===(document.getElementById('visitDate')?.value||document.getElementById('diaryDate')?.value||todayStr()));
+  const hasDetails=!!(visit&&(visit.commented||visit.gifted||(visit.note||'').trim()));
+  if(recordBtn){
+    recordBtn.classList.toggle('recorded',hasDetails);
+    recordBtn.textContent=hasDetails?'📝記録':'📝記録';
+  }
+  row.classList.toggle('is-recorded',hasDetails);
   row.classList.add('is-selected');
   updateDiaryPeopleCount();
 }
@@ -1084,8 +1110,41 @@ function renderBirthdayCalendar(){
 }
 function renderUpcomingBirthdays(){
   const el=document.getElementById('upcomingBirthdays');if(!el)return;
-  const list=data.listeners.map(l=>({l,days:daysUntilBirthday(l)})).filter(x=>x.days!==null&&x.days<=31).sort((a,b)=>a.days-b.days||a.l.name.localeCompare(b.l.name,'ja')).slice(0,10);
-  el.innerHTML=list.length?list.map(x=>{const p=getBirthdayParts(x.l);const label=x.days===0?'本日':x.days===1?'明日':`あと${x.days}日`;return `<div class="upcoming-row" onclick="showDetail('${x.l.id}')"><div class="days-badge">${label}</div><div><strong>${esc(x.l.name)}</strong><div class="meta">🎂 ${p.month}月${p.day}日</div></div></div>`}).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
+  const list=data.listeners
+    .map(l=>({l,days:daysUntilBirthday(l)}))
+    .filter(x=>x.days!==null&&x.days<=31)
+    .sort((a,b)=>a.days-b.days||a.l.name.localeCompare(b.l.name,'ja'));
+
+  if(!list.length){
+    el.innerHTML='<div class="empty">1か月以内の誕生日はありません</div>';
+    return;
+  }
+
+  const groups=[
+    {title:'🎉 本日・明日',items:list.filter(x=>x.days<=1)},
+    {title:'📅 7日以内',items:list.filter(x=>x.days>=2&&x.days<=7)},
+    {title:'🌱 8日〜31日以内',items:list.filter(x=>x.days>=8&&x.days<=31)}
+  ];
+
+  el.innerHTML='<div class="upcoming-groups">'+groups.filter(g=>g.items.length).map(g=>`
+    <div>
+      <div class="upcoming-group-title">${g.title}</div>
+      ${g.items.map(x=>{
+        const p=getBirthdayParts(x.l);
+        const label=x.days===0?'本日':x.days===1?'明日':`あと${x.days}日`;
+        const cls=x.days===0?'today':x.days===1?'tomorrow':x.days<=7?'week':'later';
+        const note=x.days===0?'今日がお誕生日です！':x.days===1?'明日がお誕生日です！':x.days<=7?'もうすぐです':'今月中です';
+        return `<div class="upcoming-row" onclick="showDetail('${x.l.id}')">
+          <div class="days-badge ${cls}">${label}</div>
+          <div class="upcoming-info">
+            <strong>${esc(x.l.name)}</strong>
+            <div class="birthday-date">🎂 ${p.month}月${p.day}日</div>
+            <div class="birthday-note">${note}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('')+'</div>';
 }
 const _oldRenderAll=renderAll; renderAll=function(){_oldRenderAll();renderDiaries();renderBirthdayAlerts();renderBirthdayCalendar();};
 renderAll();
