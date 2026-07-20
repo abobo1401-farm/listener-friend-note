@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ff6fae" />
-  <link rel="icon" type="image/png" href="icon.png" />
-  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="icon" type="image/png" href="icon-amane.png" />
+  <link rel="apple-touch-icon" href="icon-amane.png" />
   <title>🎧 リスナーフレンドノート 📒</title>
   <style>
 :root{
@@ -23,13 +23,14 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .view{display:none}.view.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:linear-gradient(180deg,#fffdf8,#f2eadf);border:1px solid var(--line);border-radius:16px;padding:13px;text-align:center}.stat .n{font-size:25px;font-weight:900;color:var(--main);line-height:1.1}.stat .label{font-size:12px;color:var(--muted);margin-top:4px}
 .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:17px}.search,input,select,textarea{width:100%;font-size:16px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;color:var(--text);outline:none;min-width:0}.search:focus,input:focus,select:focus,textarea:focus{border-color:var(--main);box-shadow:0 0 0 3px rgba(255,111,174,.16)}textarea{min-height:92px;resize:vertical}
-.listener-list{display:flex;flex-direction:column;gap:9px}.listener{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#fff}.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:0 0 44px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--main),var(--accent))}.listener-main{min-width:0;flex:1}.listener-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.listener-meta{margin-top:3px;color:var(--muted);font-size:12px;line-height:1.5}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;background:#eef5e8;color:#4f7d43;font-size:11px;border:1px solid #cbdcbc}
+.listener-list{display:flex;flex-direction:column;gap:9px}.listener{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#fff}.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:0 0 44px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--main),var(--accent))}.listener-main{min-width:0;flex:1}.listener-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.listener-meta{margin-top:3px;color:var(--muted);font-size:12px;line-height:1.5}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:2px 6px;background:#eef5e8;color:#4f7d43;font-size:10px;border:1px solid #cbdcbc}
 .tag-filter-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
 .tag-filter-chip{appearance:none;-webkit-appearance:none;border:1px solid #cbdcbc;background:#f7f9f4;color:#4f7d43;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;font:inherit;cursor:pointer}
 .tag-filter-chip.active{background:#4f7d43;color:#fff;border-color:#4f7d43;box-shadow:0 3px 8px rgba(79,125,67,.3)}
 .toggle-btn{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 10px;background:#f7f5f2;color:var(--muted);font-weight:800;font-size:13px;text-align:center}
 .toggle-btn.active.commented{background:#2f6fed;color:#fff;border-color:#2f6fed;box-shadow:0 3px 8px rgba(47,111,237,.3)}
 .toggle-btn.active.gifted{background:#e0459a;color:#fff;border-color:#e0459a;box-shadow:0 3px 8px rgba(224,69,154,.3)}
+.toggle-btn.active.favorite{background:#f2b705;color:#fff;border-color:#f2b705;box-shadow:0 3px 8px rgba(242,183,5,.35)}
 .add-listener-btn{width:100%;border:2px dashed #cdbda9;border-radius:14px;padding:11px;background:#fffdf8;color:var(--accent);font-weight:800;font-size:13px;margin-bottom:10px}
 .color-choice-list{display:flex;flex-wrap:wrap;gap:10px}
 .color-swatch{width:34px;height:34px;border-radius:50%;border:2px solid transparent;box-shadow:0 1px 3px rgba(0,0,0,.15);padding:0}
@@ -59,6 +60,20 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .calendar-day{overflow:visible;min-width:0}
 .calendar-day.today-day{outline:2px solid var(--leaf);background:#eef5e8}
 .calendar-day .birthday-name{background:var(--wood);cursor:pointer}
+
+.upcoming-groups{display:flex;flex-direction:column;gap:12px}
+.upcoming-group-title{font-size:13px;font-weight:900;color:var(--wood);margin:2px 0 6px;padding-left:3px}
+.upcoming-row{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 3px 10px rgba(112,87,58,.08);cursor:pointer}
+.upcoming-row + .upcoming-row{margin-top:8px}
+.days-badge{flex:0 0 64px;text-align:center;border-radius:13px;padding:9px 5px;font-size:12px;font-weight:900;line-height:1.25}
+.days-badge.today{background:#e7f5e2;color:#3f7f49;border:1px solid #bcd8b6}
+.days-badge.tomorrow{background:#fff0df;color:#b86b11;border:1px solid #e8c79d}
+.days-badge.week{background:#eef2fb;color:#2f6fed;border:1px solid #cfd9f2}
+.days-badge.later{background:#f3ede7;color:var(--wood);border:1px solid #d9c6b4}
+.upcoming-info{min-width:0;flex:1}
+.upcoming-info strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upcoming-info .birthday-date{font-size:12px;color:var(--muted);margin-top:3px}
+.upcoming-info .birthday-note{font-size:11px;color:var(--main);font-weight:800;margin-top:3px}
 @media(max-width:430px){.tag-add-row{grid-template-columns:1fr}.birthday-selects{grid-template-columns:1fr 1fr}}
 
 .diary-people-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
@@ -69,6 +84,9 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 .attendee-name{flex:1 1 130px;min-width:90px;border:none;border-radius:12px;padding:10px 11px;background:#f4eef2;color:var(--text);font-weight:800;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:none}
 .attendee-name.selected{background:linear-gradient(135deg,var(--leaf),var(--main2));color:#fff}
 .record-btn{flex:0 0 auto;border:1px solid #cfd9f2;border-radius:999px;padding:8px 12px;background:#eef2fb;color:#3f5fa8;font-size:12px;font-weight:800}
+.detail-flag{flex:0 0 auto;border:1px solid #d9c6b4;border-radius:50%;width:26px;height:26px;padding:0;background:#f1e8dc;color:var(--wood);font-size:12px;font-weight:900;display:grid;place-items:center;box-shadow:0 1px 3px rgba(112,87,58,.12)}
+.record-btn.recorded{background:#2f6fed;color:#fff;border-color:#2f6fed;box-shadow:0 3px 8px rgba(47,111,237,.3)}
+.attendee-row.is-recorded .attendee-name{border:2px solid #2f6fed}
 .flag-btn{transition:background .15s,color .15s}
 #diaryPeople .empty{padding:14px 4px}
 </style>
@@ -77,7 +95,6 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 <div class="app">
   <header>
     <h1 id="appTitle">🎧 リスナーフレンドノート 📒</h1>
-    
   </header>
 
   <section id="homeView" class="view active">
@@ -92,13 +109,13 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
     </div>
 
     <div class="card">
-      <h2 class="section-title">最近登録した人（直近3日）</h2>
-      <div id="recentListeners" class="listener-list"></div>
+      <h2 class="section-title">もうすぐ誕生日</h2>
+      <div id="birthdayList" class="listener-list"></div>
     </div>
 
     <div class="card">
-      <h2 class="section-title">もうすぐ誕生日</h2>
-      <div id="birthdayList" class="listener-list"></div>
+      <h2 class="section-title">最近登録した人（直近3日）</h2>
+      <div id="recentListeners" class="listener-list"></div>
     </div>
   </section>
 
@@ -220,6 +237,7 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <strong id="formTitle">リスナー登録</strong>
       <button class="close" onclick="closeModal('listenerModal')">×</button>
     </div>
+    <button class="btn" onclick="saveListener()" style="margin-bottom:12px">保存する</button>
     <input type="hidden" id="listenerId" />
     <div class="field">
       <label>リスナー名 *</label>
@@ -267,7 +285,6 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <label>自由メモ</label>
       <textarea id="listenerMemo" placeholder="覚えておきたいこと"></textarea>
     </div>
-    <button class="btn" onclick="saveListener()">保存する</button>
   </div>
 </div>
 
@@ -317,13 +334,13 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 <div id="diaryModal" class="modal">
   <div class="modal-box">
     <div class="modal-head"><strong>配信日記</strong><button class="close" onclick="closeModal('diaryModal')">×</button></div>
+    <button class="btn" onclick="saveDiary()" style="margin-bottom:12px">保存する</button>
     <input type="hidden" id="diaryId">
     <div class="field"><label>配信日</label><input id="diaryDate" type="date"></div>
     <div class="row"><div class="field"><label>開始時間</label><input id="diaryStart" type="time"></div><div class="field"><label>終了時間</label><input id="diaryEnd" type="time"></div></div>
     <div class="field"><label>配信内容</label><input id="diaryContent" placeholder="例：歌枠、雑談、イベント"></div>
     <div class="field">
-      <label>アイコンカラー</label>
-      <div id="diaryColorChoices" class="color-choice-list"></div>
+      <button type="button" id="diaryFavoriteBtn" class="toggle-btn" onclick="toggleDiaryFavorite()">☆ お気に入りに登録</button>
     </div>
     <div class="field"><label>何を話したか</label><textarea id="diaryTalk" placeholder="配信中に話した内容"></textarea></div>
     <div class="field">
@@ -334,10 +351,15 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <div id="diaryPeople"></div>
       <div class="hint">タグで絞り込み・名前検索で探しやすくできます。名前をタップで来訪に追加、✅出席・👏ないぱちはボタンでON/OFF。👏ないぱちを押すと✅出席も自動でONになります。📝記録でそのリスナーの来訪履歴に詳細を保存できます（保存すると✅出席も自動でONになります）。リストにいない人は「＋新しいリスナーを登録して追加」からその場で登録できます。</div>
     </div>
-    <button class="btn" onclick="saveDiary()">保存する</button>
   </div>
 </div>
 <script>
+(function applySpecialIcon(){
+  const iconParam=new URLSearchParams(location.search).get('icon');
+  if(!iconParam)return;
+  const file=`icon-${iconParam}.png`;
+  document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(el=>el.setAttribute('href',file));
+})();
 const STORAGE_KEY = 'listenerManager_v1';
 let data = loadData();
 const DEFAULT_THEME_COLOR='#6f9f55';
@@ -448,16 +470,17 @@ function selectListenerColor(c){
   selectedListenerColor=c;
   renderColorChoices();
 }
-let selectedDiaryColor='';
-function renderDiaryColorChoices(){
-  const box=document.getElementById('diaryColorChoices');
-  if(!box)return;
-  box.innerHTML=`<button type="button" class="color-swatch none ${!selectedDiaryColor?'selected':''}" onclick="selectDiaryColor('')">なし</button>`+
-    COLOR_PALETTE.map(c=>`<button type="button" class="color-swatch ${selectedDiaryColor===c?'selected':''}" style="background:${c}" onclick="selectDiaryColor('${c}')"></button>`).join('');
+let selectedDiaryFavorite=false;
+function renderDiaryFavoriteBtn(){
+  const btn=document.getElementById('diaryFavoriteBtn');
+  if(!btn)return;
+  btn.classList.toggle('active',selectedDiaryFavorite);
+  btn.classList.toggle('favorite',selectedDiaryFavorite);
+  btn.textContent=selectedDiaryFavorite?'★ お気に入り登録中':'☆ お気に入りに登録';
 }
-function selectDiaryColor(c){
-  selectedDiaryColor=c;
-  renderDiaryColorChoices();
+function toggleDiaryFavorite(){
+  selectedDiaryFavorite=!selectedDiaryFavorite;
+  renderDiaryFavoriteBtn();
 }
 
 function loadData(){
@@ -486,6 +509,9 @@ function todayStr(){
 }
 function esc(s=''){
   return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function encTag(s=''){
+  return encodeURIComponent(s).replace(/'/g,'%27');
 }
 function formatDate(s){
   if(!s) return '未記録';
@@ -535,7 +561,7 @@ function openListenerForm(id=''){
 function renderListenerTagChoices(){
   const box=document.getElementById('listenerTagChoices');
   if(!box)return;
-  box.innerHTML=(data.tagMaster||[]).map(tag=>`<button type="button" class="tag-choice ${selectedListenerTags.has(tag)?'selected':''}" onclick="toggleListenerTag('${encodeURIComponent(tag)}')">${esc(tag)}</button>`).join('');
+  box.innerHTML=(data.tagMaster||[]).map(tag=>`<button type="button" class="tag-choice ${selectedListenerTags.has(tag)?'selected':''}" onclick="toggleListenerTag('${encTag(tag)}')">${esc(tag)}</button>`).join('');
 }
 function toggleListenerTag(encoded){
   const tag=decodeURIComponent(encoded);
@@ -677,7 +703,7 @@ function monthlyAttendanceBreakdown(visits){
   });
   return {early,mid,late};
 }
-function listenerCard(l){
+function listenerCard(l,showMonthlyBreakdown=true){
   const visits=listenerVisits(l.id);
   const last=visits[0]?.date;
   const {early,mid,late}=monthlyAttendanceBreakdown(visits);
@@ -686,7 +712,7 @@ function listenerCard(l){
     <div class="listener-main" onclick="showDetail('${l.id}')">
       <div class="listener-name">${esc(l.name)}${l.nickname?` <small>（${esc(l.nickname)}）</small>`:''}</div>
       <div class="listener-meta">最終来訪：${last?formatDate(last):'未記録'} ／ 累計 ${visits.length}回</div>
-      <div class="listener-meta">今月の出席：上旬${early}回／中旬${mid}回／下旬${late}回</div>
+      ${showMonthlyBreakdown?`<div class="listener-meta">今月の出席：上旬${early}回／中旬${mid}回／下旬${late}回</div>`:''}
       ${l.tags?.length?`<div class="tags">${l.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
     </div>
     <button class="mini-btn" onclick="openVisitForm('${l.id}')">記録</button>
@@ -744,11 +770,11 @@ function renderAll(){
   const recentCutoffStr=recentCutoff.toISOString();
   const recent=[...data.listeners].filter(l=>l.createdAt&&l.createdAt>=recentCutoffStr).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
   const recentEl=document.getElementById('recentListeners');
-  if(recentEl)recentEl.innerHTML=recent.length?recent.map(listenerCard).join(''):'<div class="empty">直近3日で登録されたリスナーはいません</div>';
+  if(recentEl)recentEl.innerHTML=recent.length?recent.map(l=>listenerCard(l,false)).join(''):'<div class="empty">直近3日で登録されたリスナーはいません</div>';
 
   const upcoming=[...data.listeners].map(l=>({l,days:daysUntilBirthday(l)})).filter(x=>x.days!==null&&x.days<=31).sort((a,b)=>a.days-b.days).map(x=>x.l).slice(0,5);
   const birthdayListEl=document.getElementById('birthdayList');
-  if(birthdayListEl)birthdayListEl.innerHTML=upcoming.length?upcoming.map(listenerCard).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
+  if(birthdayListEl)birthdayListEl.innerHTML=upcoming.length?upcoming.map(l=>listenerCard(l,false)).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
 
   renderListenerList();
   renderTagMasterList();
@@ -767,7 +793,7 @@ function renderTagFilterRow(){
   if(!tags.length){bar.innerHTML='';bar.className='';return;}
   bar.className='tag-filter-row';
   bar.innerHTML=`<button type="button" class="tag-filter-chip ${!activeTagFilter?'active':''}" onclick="clearTagFilter()">すべて</button>`+
-    tags.map(t=>`<button type="button" class="tag-filter-chip ${activeTagFilter===t?'active':''}" onclick="filterByTag('${encodeURIComponent(t)}')">${esc(t)}</button>`).join('');
+    tags.map(t=>`<button type="button" class="tag-filter-chip ${activeTagFilter===t?'active':''}" onclick="filterByTag('${encTag(t)}')">${esc(t)}</button>`).join('');
 }
 function renderTodayList(){
   const q=(document.getElementById('todaySearch')?.value||'').toLowerCase();
@@ -781,7 +807,7 @@ function renderTodayList(){
 function renderTagMasterList(){
   const el=document.getElementById('tagMasterList');if(!el)return;
   const tags=data.tagMaster||[];
-  el.innerHTML=tags.length?tags.map(tag=>`<button type="button" class="tag-choice selected" onclick="deleteMasterTag('${encodeURIComponent(tag)}')">${esc(tag)} ×</button>`).join(''):'<div class="empty">タグ候補がありません</div>';
+  el.innerHTML=tags.length?tags.map(tag=>`<button type="button" class="tag-choice selected" onclick="deleteMasterTag('${encTag(tag)}')">${esc(tag)} ×</button>`).join(''):'<div class="empty">タグ候補がありません</div>';
 }
 function addMasterTag(){
   const input=document.getElementById('newMasterTag');
@@ -851,8 +877,8 @@ function openDiaryForm(id=''){
   document.getElementById('diaryEnd').value=d?.end||'';
   document.getElementById('diaryContent').value=d?.content||'';
   document.getElementById('diaryTalk').value=d?.talk||'';
-  selectedDiaryColor=d?.color||'';
-  renderDiaryColorChoices();
+  selectedDiaryFavorite=!!d?.favorite;
+  renderDiaryFavoriteBtn();
   document.getElementById('diaryPeopleSearch').value='';
   diaryTagFilter=null;
   const old={}; (d?.people||[]).forEach(x=>old[x.listenerId]=x);
@@ -862,11 +888,14 @@ function openDiaryForm(id=''){
   });
   document.getElementById('diaryPeople').innerHTML=sorted.length?sorted.map(l=>{
     const x=old[l.id]||{};
+    const diaryDate=d?.date||todayStr();
+    const recorded=data.visits.some(v=>v.listenerId===l.id&&v.date===diaryDate&&(v.commented||v.gifted||(v.note||'').trim()));
     const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
     const tags=esc((l.tags||[]).join('|'));
-    return `<div class="attendee-row ${x.selected?'is-selected':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
-      <button type="button" class="attendee-name ${x.selected?'selected':''}" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
-      <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
+    return `<div class="attendee-row ${x.selected?'is-selected':''} ${recorded?'is-recorded':''}" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
+      <button type="button" class="attendee-name ${x.selected?'selected':''}" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.name)}</button>
+      <button type="button" class="detail-flag" onclick="showDetail('${l.id}')" title="リスナー詳細を見る">！</button>
+      <button type="button" class="record-btn ${recorded?'recorded':''}" onclick="recordVisitFromDiary('${l.id}')">${recorded?'📝記録':'📝記録'}</button>
       <button type="button" class="flag-btn attend ${x.attended?'active attend':''}" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
       <button type="button" class="flag-btn pachi ${x.naipachi?'active pachi':''}" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
     </div>`;
@@ -882,7 +911,7 @@ function renderDiaryTagFilterRow(){
   if(!tags.length){bar.innerHTML='';bar.className='';return;}
   bar.className='tag-filter-row';
   bar.innerHTML=`<button type="button" class="tag-filter-chip ${!diaryTagFilter?'active':''}" onclick="clearDiaryTagFilter()">すべて</button>`+
-    tags.map(t=>`<button type="button" class="tag-filter-chip ${diaryTagFilter===t?'active':''}" onclick="filterDiaryByTag('${encodeURIComponent(t)}')">${esc(t)}</button>`).join('');
+    tags.map(t=>`<button type="button" class="tag-filter-chip ${diaryTagFilter===t?'active':''}" onclick="filterDiaryByTag('${encTag(t)}')">${esc(t)}</button>`).join('');
 }
 function filterDiaryByTag(encoded){
   const tag=decodeURIComponent(encoded);
@@ -908,7 +937,8 @@ function addListenerRowToDiary(l){
   const search=esc((l.name+' '+(l.nickname||'')).toLowerCase());
   const tags=esc((l.tags||[]).join('|'));
   const html=`<div class="attendee-row is-selected" data-id="${l.id}" data-search="${search}" data-tags="${tags}">
-      <button type="button" class="attendee-name selected" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.nickname||l.name)}</button>
+      <button type="button" class="attendee-name selected" data-role="person" onclick="toggleDiaryFlag('${l.id}','person')"><span class="dot" style="${l.color?`background:${l.color}`:''}"></span>${esc(l.name)}</button>
+      <button type="button" class="detail-flag" onclick="showDetail('${l.id}')" title="リスナー詳細を見る">！</button>
       <button type="button" class="record-btn" onclick="recordVisitFromDiary('${l.id}')">📝記録</button>
       <button type="button" class="flag-btn attend active attend" data-role="attend" onclick="toggleDiaryFlag('${l.id}','attend')">✅出席</button>
       <button type="button" class="flag-btn pachi" data-role="pachi" onclick="toggleDiaryFlag('${l.id}','pachi')">👏ないぱち</button>
@@ -928,6 +958,14 @@ function markDiaryAttendeeRecorded(listenerId){
   if(!row)return;
   row.querySelector('[data-role="person"]').classList.add('selected');
   row.querySelector('[data-role="attend"]').classList.add('active');
+  const recordBtn=row.querySelector('.record-btn');
+  const visit=data.visits.find(v=>v.listenerId===listenerId&&v.date===(document.getElementById('visitDate')?.value||document.getElementById('diaryDate')?.value||todayStr()));
+  const hasDetails=!!(visit&&(visit.commented||visit.gifted||(visit.note||'').trim()));
+  if(recordBtn){
+    recordBtn.classList.toggle('recorded',hasDetails);
+    recordBtn.textContent=hasDetails?'📝記録':'📝記録';
+  }
+  row.classList.toggle('is-recorded',hasDetails);
   row.classList.add('is-selected');
   updateDiaryPeopleCount();
 }
@@ -981,7 +1019,7 @@ function saveDiary(){
       attended:row.querySelector('[data-role="attend"]').classList.contains('active'),
       naipachi:row.querySelector('[data-role="pachi"]').classList.contains('active')
     }));
-  const obj={id:id||uid('d'),date:document.getElementById('diaryDate').value||todayStr(),start:document.getElementById('diaryStart').value,end:document.getElementById('diaryEnd').value,content:document.getElementById('diaryContent').value.trim(),talk:document.getElementById('diaryTalk').value.trim(),color:selectedDiaryColor,people};
+  const obj={id:id||uid('d'),date:document.getElementById('diaryDate').value||todayStr(),start:document.getElementById('diaryStart').value,end:document.getElementById('diaryEnd').value,content:document.getElementById('diaryContent').value.trim(),talk:document.getElementById('diaryTalk').value.trim(),favorite:selectedDiaryFavorite,people};
   data.diaries=data.diaries||[];
   if(id)data.diaries=data.diaries.map(x=>x.id===id?obj:x);else data.diaries.push(obj);
   syncDiaryAttendanceToVisits(obj);
@@ -1025,7 +1063,7 @@ function renderDiaries(){
     });
   }
   const el=document.getElementById('diaryList'); if(!el)return;
-  el.innerHTML=list.length?list.map(d=>`<div class="listener" onclick="openDiaryForm('${d.id}')"><div class="avatar" style="${d.color?`background:${d.color}`:''}">📒</div><div class="listener-main"><div class="listener-name">${formatDate(d.date)} ${esc(d.content||'配信')}</div><div class="listener-meta">${d.start||'--:--'}～${d.end||'--:--'} ／ 来訪 ${d.people.length}人 ／ ✅出席 ${d.people.filter(x=>x.attended).length}人 ／ 👏ないぱち ${d.people.filter(x=>x.naipachi).length}人</div>${d.talk?`<div class="listener-meta">${esc(d.talk)}</div>`:''}</div></div>`).join(''):'<div class="empty">該当する配信日記がありません</div>';
+  el.innerHTML=list.length?list.map(d=>`<div class="listener" onclick="openDiaryForm('${d.id}')"><div class="avatar" style="${d.favorite?'background:#f2b705':''}">${d.favorite?'★':'📒'}</div><div class="listener-main"><div class="listener-name">${formatDate(d.date)} ${esc(d.content||'配信')}</div><div class="listener-meta">${d.start||'--:--'}～${d.end||'--:--'} ／ 来訪 ${d.people.length}人 ／ ✅出席 ${d.people.filter(x=>x.attended).length}人 ／ 👏ないぱち ${d.people.filter(x=>x.naipachi).length}人</div></div></div>`).join(''):'<div class="empty">該当する配信日記がありません</div>';
 }
 function clearDiaryFilters(){
   const s=document.getElementById('diarySearch');if(s)s.value='';
@@ -1079,8 +1117,41 @@ function renderBirthdayCalendar(){
 }
 function renderUpcomingBirthdays(){
   const el=document.getElementById('upcomingBirthdays');if(!el)return;
-  const list=data.listeners.map(l=>({l,days:daysUntilBirthday(l)})).filter(x=>x.days!==null&&x.days<=31).sort((a,b)=>a.days-b.days||a.l.name.localeCompare(b.l.name,'ja')).slice(0,10);
-  el.innerHTML=list.length?list.map(x=>{const p=getBirthdayParts(x.l);const label=x.days===0?'本日':x.days===1?'明日':`あと${x.days}日`;return `<div class="upcoming-row" onclick="showDetail('${x.l.id}')"><div class="days-badge">${label}</div><div><strong>${esc(x.l.name)}</strong><div class="meta">🎂 ${p.month}月${p.day}日</div></div></div>`}).join(''):'<div class="empty">1か月以内の誕生日はありません</div>';
+  const list=data.listeners
+    .map(l=>({l,days:daysUntilBirthday(l)}))
+    .filter(x=>x.days!==null&&x.days<=31)
+    .sort((a,b)=>a.days-b.days||a.l.name.localeCompare(b.l.name,'ja'));
+
+  if(!list.length){
+    el.innerHTML='<div class="empty">1か月以内の誕生日はありません</div>';
+    return;
+  }
+
+  const groups=[
+    {title:'🎉 本日・明日',items:list.filter(x=>x.days<=1)},
+    {title:'📅 7日以内',items:list.filter(x=>x.days>=2&&x.days<=7)},
+    {title:'🌱 8日〜31日以内',items:list.filter(x=>x.days>=8&&x.days<=31)}
+  ];
+
+  el.innerHTML='<div class="upcoming-groups">'+groups.filter(g=>g.items.length).map(g=>`
+    <div>
+      <div class="upcoming-group-title">${g.title}</div>
+      ${g.items.map(x=>{
+        const p=getBirthdayParts(x.l);
+        const label=x.days===0?'本日':x.days===1?'明日':`あと${x.days}日`;
+        const cls=x.days===0?'today':x.days===1?'tomorrow':x.days<=7?'week':'later';
+        const note=x.days===0?'今日がお誕生日です！':x.days===1?'明日がお誕生日です！':x.days<=7?'もうすぐです':'今月中です';
+        return `<div class="upcoming-row" onclick="showDetail('${x.l.id}')">
+          <div class="days-badge ${cls}">${label}</div>
+          <div class="upcoming-info">
+            <strong>${esc(x.l.name)}</strong>
+            <div class="birthday-date">🎂 ${p.month}月${p.day}日</div>
+            <div class="birthday-note">${note}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('')+'</div>';
 }
 const _oldRenderAll=renderAll; renderAll=function(){_oldRenderAll();renderDiaries();renderBirthdayAlerts();renderBirthdayCalendar();};
 renderAll();
