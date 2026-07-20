@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#ff6fae" />
-  <link rel="icon" type="image/png" href="icon-amane.png" />
-  <link rel="apple-touch-icon" href="icon-amane.png" />
+<!-- saved from url=(0045)file:///C:/Users/abobo/Downloads/amane_5.html -->
+<html lang="ja" style="--main: #539f2d; --leaf: #539f2d; --main2: #86d260; --wood: #36671d; --accent: #3e7722;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#539f2d">
+  <link rel="icon" type="image/png" href="file:///C:/Users/abobo/Downloads/icon-amane.png">
+  <link rel="apple-touch-icon" href="file:///C:/Users/abobo/Downloads/icon-amane.png">
   <title>🎧 リスナーフレンドノート 📒</title>
   <style>
 :root{
@@ -106,42 +106,90 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 
   <section id="homeView" class="view active">
     <div class="grid">
-      <div class="stat"><div class="n" id="totalListeners">0</div><div class="label">登録リスナー</div></div>
-      <div class="stat"><div class="n" id="birthdayCount">0</div><div class="label">今月の誕生日</div></div>
+      <div class="stat"><div class="n" id="totalListeners">5</div><div class="label">登録リスナー</div></div>
+      <div class="stat"><div class="n" id="birthdayCount">3</div><div class="label">今月の誕生日</div></div>
     </div>
 
     <div class="card">
       <h2 class="section-title">🎂 今日・明日の誕生日</h2>
-      <div id="birthdayAlerts"></div>
+      <div id="birthdayAlerts"><div class="birthday-alert today"><strong>🎉 本日誕生日</strong><div style="margin-top:6px">該当する人はいません</div></div><div class="birthday-alert tomorrow"><strong>🎁 明日誕生日</strong><div style="margin-top:6px">該当する人はいません</div></div></div>
     </div>
 
     <div class="card">
       <h2 class="section-title">もうすぐ誕生日</h2>
-      <div id="birthdayList" class="listener-list"></div>
+      <div id="birthdayList" class="listener-list"><div class="listener">
+    <div class="avatar" style="background:#c0392b">り</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrh199nn_rtx9gg&#39;)">
+      <div class="listener-name">りんご <small>（りんちゃん）</small></div>
+      <div class="listener-meta">最終来訪：2026/7/12 ／ 累計 1回</div>
+      <div class="tags"><span class="tag">ライバー</span></div>
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrh199nn_rtx9gg&#39;)">記録</button>
+  </div></div>
     </div>
 
     <div class="card">
       <h2 class="section-title">最近登録した人（直近3日）</h2>
-      <div id="recentListeners" class="listener-list"></div>
+      <div id="recentListeners" class="listener-list"><div class="empty">直近3日で登録されたリスナーはいません</div></div>
     </div>
   </section>
 
   <section id="listenersView" class="view">
     <div class="card">
-      <input id="searchInput" class="search" placeholder="名前・呼び方・タグで検索" />
+      <input id="searchInput" class="search" placeholder="名前・呼び方・タグで検索">
     </div>
     <div class="card">
       <h2 class="section-title">リスナー一覧 <button class="mini-btn" onclick="openListenerForm()">＋登録</button></h2>
-      <div id="tagFilterBar"></div>
-      <div id="listenerList" class="listener-list"></div>
+      <div id="tagFilterBar" class="tag-filter-row"><button type="button" class="tag-filter-chip active" onclick="clearTagFilter()">すべて</button><button type="button" class="tag-filter-chip " onclick="filterByTag(&#39;%E5%B8%B8%E9%80%A3&#39;)">常連</button><button type="button" class="tag-filter-chip " onclick="filterByTag(&#39;%E3%83%A9%E3%82%A4%E3%83%90%E3%83%BC&#39;)">ライバー</button></div>
+      <div id="listenerList" class="listener-list"><div class="listener">
+    <div class="avatar" style="background:#e0459a">え</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrh176ed_exq2oi&#39;)">
+      <div class="listener-name">A <small>（えーちゃん）</small></div>
+      <div class="listener-meta">最終来訪：2026/7/20 ／ 累計 2回</div>
+      
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrh176ed_exq2oi&#39;)">記録</button>
+  </div><div class="listener">
+    <div class="avatar" style="">え</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrg1gipu_242zh9&#39;)">
+      <div class="listener-name">Aさん <small>（えーちゃん）</small></div>
+      <div class="listener-meta">最終来訪：2026/7/20 ／ 累計 3回</div>
+      <div class="tags"><span class="tag">常連</span><span class="tag">ライバー</span></div>
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrg1gipu_242zh9&#39;)">記録</button>
+  </div><div class="listener">
+    <div class="avatar" style="background:#2f6fed">び</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrh17uy5_kfd39g&#39;)">
+      <div class="listener-name">B <small>（びーちゃん）</small></div>
+      <div class="listener-meta">最終来訪：2026/7/20 ／ 累計 2回</div>
+      
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrh17uy5_kfd39g&#39;)">記録</button>
+  </div><div class="listener">
+    <div class="avatar" style="background:#4f8b56">ば</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrh19w96_0d2wl4&#39;)">
+      <div class="listener-name">ばば</div>
+      <div class="listener-meta">最終来訪：2026/7/20 ／ 累計 2回</div>
+      
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrh19w96_0d2wl4&#39;)">記録</button>
+  </div><div class="listener">
+    <div class="avatar" style="background:#c0392b">り</div>
+    <div class="listener-main" onclick="showDetail(&#39;l_mrh199nn_rtx9gg&#39;)">
+      <div class="listener-name">りんご <small>（りんちゃん）</small></div>
+      <div class="listener-meta">最終来訪：2026/7/12 ／ 累計 1回</div>
+      <div class="tags"><span class="tag">ライバー</span></div>
+    </div>
+    <button class="mini-btn" onclick="openVisitForm(&#39;l_mrh199nn_rtx9gg&#39;)">記録</button>
+  </div></div>
     </div>
   </section>
 
   <section id="diaryView" class="view">
     <div class="card diary-filter-card">
-      <input id="diarySearch" class="search" placeholder="配信内容・話した内容・リスナー名で検索" oninput="renderDiaries()" />
+      <input id="diarySearch" class="search" placeholder="配信内容・話した内容・リスナー名で検索" oninput="renderDiaries()">
       <div class="field" style="margin:8px 0 0">
-        <input id="diaryMonthFilter" type="month" onchange="renderDiaries()" />
+        <input id="diaryMonthFilter" type="month" onchange="renderDiaries()">
       </div>
       <div class="row" style="margin-top:8px;grid-template-columns:1fr 1fr;align-items:center">
         <button class="mini-btn" id="diaryFavFilterBtn" onclick="toggleDiaryFavoriteFilter()">☆お気に入りのみ</button>
@@ -152,21 +200,33 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <h2 class="section-title">配信日記 <button class="mini-btn" onclick="openDiaryForm()">＋新しい日記</button></h2>
       <div class="hint">配信時間、配信内容、何を話したか、来てくれたリスナー、✅出席、👏ないぱちを記録します。</div>
     </div>
-    <div class="card"><div id="diaryList" class="listener-list"></div></div>
+    <div class="card"><div id="diaryList" class="listener-list"><div class="listener" onclick="openDiaryForm(&#39;d_mrt1flhe_brx0x1&#39;)"><div class="diary-avatar-wrap"><div class="avatar" style="">📒</div><button type="button" class="fav-star " onclick="event.stopPropagation();toggleDiaryFavorite(&#39;d_mrt1flhe_brx0x1&#39;)" title="お気に入り">☆</button></div><div class="listener-main"><div class="listener-name">2026/7/20 配信</div><div class="listener-meta">--:--～--:-- ／ 来訪 3人 ／ ✅出席 1人 ／ 👏ないぱち 0人</div></div></div><div class="listener" onclick="openDiaryForm(&#39;d_mrt1323j_9nsbyc&#39;)"><div class="diary-avatar-wrap"><div class="avatar" style="">📒</div><button type="button" class="fav-star " onclick="event.stopPropagation();toggleDiaryFavorite(&#39;d_mrt1323j_9nsbyc&#39;)" title="お気に入り">☆</button></div><div class="listener-main"><div class="listener-name">2026/7/20 パネル</div><div class="listener-meta">00:33～21:33 ／ 来訪 3人 ／ ✅出席 3人 ／ 👏ないぱち 2人</div></div></div><div class="listener" onclick="openDiaryForm(&#39;d_mrh19z9c_telk3w&#39;)"><div class="diary-avatar-wrap"><div class="avatar" style="">📒</div><button type="button" class="fav-star " onclick="event.stopPropagation();toggleDiaryFavorite(&#39;d_mrh19z9c_telk3w&#39;)" title="お気に入り">☆</button></div><div class="listener-main"><div class="listener-name">2026/7/12 テスト</div><div class="listener-meta">12:05～13:05 ／ 来訪 5人 ／ ✅出席 4人 ／ 👏ないぱち 0人</div><div class="listener-meta">テスト配信</div></div></div><div class="listener" onclick="openDiaryForm(&#39;d_mrg1d3c0_168ir6&#39;)"><div class="diary-avatar-wrap"><div class="avatar" style="">📒</div><button type="button" class="fav-star " onclick="event.stopPropagation();toggleDiaryFavorite(&#39;d_mrg1d3c0_168ir6&#39;)" title="お気に入り">☆</button></div><div class="listener-main"><div class="listener-name">2026/7/11 定期　パネルゲーム</div><div class="listener-meta">12:00～13:00 ／ 来訪 1人 ／ ✅出席 1人 ／ 👏ないぱち 0人</div><div class="listener-meta">弾幕で遊んだ　めっちゃ笑った</div></div></div></div></div>
   </section>
 
   <section id="calendarView" class="view">
     <div class="card">
       <div class="calendar-head">
         <button class="mini-btn" onclick="changeCalendarMonth(-1)">‹ 前月</button>
-        <div id="calendarTitle" class="calendar-title"></div>
+        <div id="calendarTitle" class="calendar-title">2026年 7月</div>
         <button class="mini-btn" onclick="changeCalendarMonth(1)">翌月 ›</button>
       </div>
-      <div id="birthdayCalendar"></div>
+      <div id="birthdayCalendar"><div class="calendar-grid"><div class="calendar-week">日</div><div class="calendar-week">月</div><div class="calendar-week">火</div><div class="calendar-week">水</div><div class="calendar-week">木</div><div class="calendar-week">金</div><div class="calendar-week">土</div><div class="calendar-day empty-day"></div><div class="calendar-day empty-day"></div><div class="calendar-day empty-day"></div><div class="calendar-day "><div class="day-number">1</div></div><div class="calendar-day "><div class="day-number">2</div></div><div class="calendar-day "><div class="day-number">3</div></div><div class="calendar-day "><div class="day-number">4</div></div><div class="calendar-day "><div class="day-number">5</div></div><div class="calendar-day "><div class="day-number">6</div></div><div class="calendar-day "><div class="day-number">7</div></div><div class="calendar-day "><div class="day-number">8</div></div><div class="calendar-day "><div class="day-number">9</div></div><div class="calendar-day "><div class="day-number">10</div></div><div class="calendar-day "><div class="day-number">11</div></div><div class="calendar-day "><div class="day-number">12</div><span class="birthday-name" style="background:#e0459a" onclick="showDetail(&#39;l_mrh176ed_exq2oi&#39;)">🎂 A</span></div><div class="calendar-day "><div class="day-number">13</div><span class="birthday-name" style="background:#2f6fed" onclick="showDetail(&#39;l_mrh17uy5_kfd39g&#39;)">🎂 B</span></div><div class="calendar-day "><div class="day-number">14</div></div><div class="calendar-day "><div class="day-number">15</div></div><div class="calendar-day "><div class="day-number">16</div></div><div class="calendar-day "><div class="day-number">17</div></div><div class="calendar-day "><div class="day-number">18</div></div><div class="calendar-day "><div class="day-number">19</div></div><div class="calendar-day today-day today"><div class="day-number">20</div></div><div class="calendar-day "><div class="day-number">21</div></div><div class="calendar-day "><div class="day-number">22</div></div><div class="calendar-day "><div class="day-number">23</div></div><div class="calendar-day "><div class="day-number">24</div><span class="birthday-name" style="background:#c0392b" onclick="showDetail(&#39;l_mrh199nn_rtx9gg&#39;)">🎂 りんご</span></div><div class="calendar-day "><div class="day-number">25</div></div><div class="calendar-day "><div class="day-number">26</div></div><div class="calendar-day "><div class="day-number">27</div></div><div class="calendar-day "><div class="day-number">28</div></div><div class="calendar-day "><div class="day-number">29</div></div><div class="calendar-day "><div class="day-number">30</div></div><div class="calendar-day "><div class="day-number">31</div></div></div></div>
     </div>
     <div class="card">
       <h2 class="section-title">🎂 誕生日が近い人</h2>
-      <div id="upcomingBirthdays"></div>
+      <div id="upcomingBirthdays"><div class="upcoming-groups">
+    <div>
+      <div class="upcoming-group-title">📅 7日以内</div>
+      <div class="upcoming-row" onclick="showDetail(&#39;l_mrh199nn_rtx9gg&#39;)">
+          <div class="days-badge week">あと4日</div>
+          <div class="upcoming-info">
+            <strong>りんご</strong>
+            <div class="birthday-date">🎂 7月24日</div>
+            <div class="birthday-note">もうすぐです</div>
+          </div>
+        </div>
+    </div>
+  </div></div>
     </div>
   </section>
 
@@ -176,14 +236,14 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <div class="field">
         <label>テーマカラー</label>
         <div class="row" style="grid-template-columns:auto 1fr;align-items:center;gap:10px">
-          <input id="themeColorInput" type="color" oninput="applyAndSaveThemeColor(this.value)" style="width:56px;height:44px;padding:3px;border-radius:12px" />
+          <input id="themeColorInput" type="color" oninput="applyAndSaveThemeColor(this.value)" style="width:56px;height:44px;padding:3px;border-radius:12px">
           <button type="button" class="mini-btn" onclick="resetThemeColor()">初期色に戻す</button>
         </div>
         <div class="hint">ボタンやヘッダーなど、アプリ全体の色に反映されます。</div>
       </div>
       <div class="field">
         <label>タイトル</label>
-        <input id="appTitleInput" placeholder="🎧 リスナーフレンドノート 📒" oninput="applyAndSaveAppTitle(this.value)" />
+        <input id="appTitleInput" placeholder="🎧 リスナーフレンドノート 📒" oninput="applyAndSaveAppTitle(this.value)">
         <div class="row" style="margin-top:8px">
           <button type="button" class="mini-btn" onclick="resetAppTitle()">初期タイトルに戻す</button>
         </div>
@@ -191,9 +251,9 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
     </div>
     <div class="card">
       <h2 class="section-title">タグ管理</h2>
-      <div id="tagMasterList" class="chips"></div>
+      <div id="tagMasterList" class="chips"><button type="button" class="tag-choice selected" onclick="deleteMasterTag(&#39;%E5%B8%B8%E9%80%A3&#39;)">常連 ×</button><button type="button" class="tag-choice selected" onclick="deleteMasterTag(&#39;%E3%83%A9%E3%82%A4%E3%83%90%E3%83%BC&#39;)">ライバー ×</button></div>
       <div class="row" style="margin-top:10px">
-        <input id="newMasterTag" placeholder="新しいタグ名" />
+        <input id="newMasterTag" placeholder="新しいタグ名">
         <button class="mini-btn" onclick="addMasterTag()">＋追加</button>
       </div>
       <div class="hint" style="margin-top:8px">タグを押すと削除できます。使用中のタグを削除すると、そのタグが付いているリスナーからも自動で外れます。</div>
@@ -202,8 +262,8 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <h2 class="section-title">データ管理</h2>
       <div class="toolbar">
         <button class="mini-btn" onclick="exportData()">JSON保存</button>
-        <button class="mini-btn" onclick="document.getElementById('importFile').click()">JSON読込</button>
-        <input id="importFile" type="file" accept=".json,application/json" hidden />
+        <button class="mini-btn" onclick="document.getElementById(&#39;importFile&#39;).click()">JSON読込</button>
+        <input id="importFile" type="file" accept=".json,application/json" hidden="">
       </div>
       <div class="hint" style="margin-top:10px">データはこの端末のブラウザ内に保存されます。機種変更やブラウザ変更前にはJSON保存をしてください。</div>
     </div>
@@ -232,28 +292,28 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
 </div>
 
 <nav class="bottom-nav">
-  <button class="nav-btn active" data-view="home" onclick="showView('home')"><span>🏠</span>ホーム</button>
-  <button class="nav-btn" data-view="listeners" onclick="showView('listeners')"><span>👥</span>リスナー</button>
-  <button class="nav-btn" data-view="diary" onclick="showView('diary')"><span>📒</span>配信日記</button>
-  <button class="nav-btn" data-view="calendar" onclick="showView('calendar')"><span>📅</span>カレンダー</button>
-  <button class="nav-btn" data-view="settings" onclick="showView('settings')"><span>⚙️</span>設定</button>
+  <button class="nav-btn active" data-view="home" onclick="showView(&#39;home&#39;)"><span>🏠</span>ホーム</button>
+  <button class="nav-btn" data-view="listeners" onclick="showView(&#39;listeners&#39;)"><span>👥</span>リスナー</button>
+  <button class="nav-btn" data-view="diary" onclick="showView(&#39;diary&#39;)"><span>📒</span>配信日記</button>
+  <button class="nav-btn" data-view="calendar" onclick="showView(&#39;calendar&#39;)"><span>📅</span>カレンダー</button>
+  <button class="nav-btn" data-view="settings" onclick="showView(&#39;settings&#39;)"><span>⚙️</span>設定</button>
 </nav>
 
 <div id="listenerModal" class="modal">
   <div class="modal-box">
     <div class="modal-head">
       <strong id="formTitle">リスナー登録</strong>
-      <button class="close" onclick="closeModal('listenerModal')">×</button>
+      <button class="close" onclick="closeModal(&#39;listenerModal&#39;)">×</button>
     </div>
     <button class="btn" onclick="saveListener()" style="margin-bottom:14px">保存する</button>
-    <input type="hidden" id="listenerId" />
+    <input type="hidden" id="listenerId">
     <div class="field">
       <label>リスナー名 *</label>
-      <input id="listenerName" placeholder="例：りんごさん" />
+      <input id="listenerName" placeholder="例：りんごさん">
     </div>
     <div class="field">
       <label>呼び方</label>
-      <input id="nickname" placeholder="例：りんちゃん" />
+      <input id="nickname" placeholder="例：りんちゃん">
     </div>
     <div class="field">
       <label>アイコンカラー</label>
@@ -262,13 +322,13 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
     </div>
     <div class="field">
       <label>初回来訪日</label>
-      <input id="firstVisit" type="date" />
+      <input id="firstVisit" type="date">
     </div>
     <div class="field">
       <label>誕生日</label>
       <div class="birthday-selects">
-        <select id="birthMonth"><option value="">月を選択</option></select>
-        <select id="birthDay"><option value="">日を選択</option></select>
+        <select id="birthMonth"><option value="">月を選択</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select>
+        <select id="birthDay"><option value="">日を選択</option><option value="1">1日</option><option value="2">2日</option><option value="3">3日</option><option value="4">4日</option><option value="5">5日</option><option value="6">6日</option><option value="7">7日</option><option value="8">8日</option><option value="9">9日</option><option value="10">10日</option><option value="11">11日</option><option value="12">12日</option><option value="13">13日</option><option value="14">14日</option><option value="15">15日</option><option value="16">16日</option><option value="17">17日</option><option value="18">18日</option><option value="19">19日</option><option value="20">20日</option><option value="21">21日</option><option value="22">22日</option><option value="23">23日</option><option value="24">24日</option><option value="25">25日</option><option value="26">26日</option><option value="27">27日</option><option value="28">28日</option><option value="29">29日</option><option value="30">30日</option><option value="31">31日</option></select>
       </div>
       <div class="hint">年は登録せず、月と日だけ保存します。</div>
     </div>
@@ -276,7 +336,7 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <label>タグ</label>
       <div id="listenerTagChoices" class="tag-choice-list"></div>
       <div class="tag-add-row">
-        <input id="newListenerTag" placeholder="新しいタグを入力" />
+        <input id="newListenerTag" placeholder="新しいタグを入力">
         <button type="button" class="mini-btn" onclick="addListenerTagCandidate()">＋追加</button>
       </div>
       <div class="hint">候補をワンタップで選択。追加したタグは次回から候補に残ります。</div>
@@ -300,7 +360,7 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
   <div class="modal-box">
     <div class="modal-head sticky">
       <strong>リスナー詳細</strong>
-      <button class="close" onclick="closeModal('detailModal')">×</button>
+      <button class="close" onclick="closeModal(&#39;detailModal&#39;)">×</button>
     </div>
     <div id="detailContent"></div>
   </div>
@@ -310,25 +370,25 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
   <div class="modal-box">
     <div class="modal-head">
       <strong>来訪記録を追加</strong>
-      <button class="close" onclick="closeModal('visitModal')">×</button>
+      <button class="close" onclick="closeModal(&#39;visitModal&#39;)">×</button>
     </div>
     <button class="btn" onclick="saveVisit()" style="margin-bottom:14px">記録する</button>
-    <input type="hidden" id="visitListenerId" />
+    <input type="hidden" id="visitListenerId">
     <div class="field">
       <label>来訪日</label>
-      <input id="visitDate" type="date" onchange="checkVisitDateExisting()" />
+      <input id="visitDate" type="date" onchange="checkVisitDateExisting()">
       <div id="visitEditHint" class="hint" style="display:none;color:#bd7100">この日の記録はすでにあります。保存すると内容が上書き（編集）されます。</div>
     </div>
     <div class="field">
       <label>配信タイトル・イベント</label>
-      <input id="streamTitle" placeholder="例：夜の歌枠" />
+      <input id="streamTitle" placeholder="例：夜の歌枠">
     </div>
     <div class="row">
       <div class="field">
-        <button type="button" id="commentedBtn" class="toggle-btn commented" onclick="toggleVisitFlag('commented')">💬気になるコメント</button>
+        <button type="button" id="commentedBtn" class="toggle-btn commented" onclick="toggleVisitFlag(&#39;commented&#39;)">💬気になるコメント</button>
       </div>
       <div class="field">
-        <button type="button" id="giftedBtn" class="toggle-btn gifted" onclick="toggleVisitFlag('gifted')">✨特別ギフト</button>
+        <button type="button" id="giftedBtn" class="toggle-btn gifted" onclick="toggleVisitFlag(&#39;gifted&#39;)">✨特別ギフト</button>
       </div>
     </div>
     <div class="field">
@@ -345,7 +405,7 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
       <strong>配信日記</strong>
       <div class="modal-head-actions">
         <button type="button" class="head-save-btn" onclick="saveDiary()">保存する</button>
-        <button class="close" onclick="closeModal('diaryModal')">×</button>
+        <button class="close" onclick="closeModal(&#39;diaryModal&#39;)">×</button>
       </div>
     </div>
     <input type="hidden" id="diaryId">
@@ -354,7 +414,7 @@ h1{margin:0;font-size:21px;line-height:1.35;font-weight:900;letter-spacing:.02em
     <div class="field"><label>配信内容</label><input id="diaryContent" placeholder="例：歌枠、雑談、イベント"></div>
     <div class="field">
       <div class="diary-people-head"><label style="margin:0">来てくれたリスナー</label><span id="diaryPeopleCount" class="diary-people-count"></span></div>
-      <input id="diaryPeopleSearch" class="search" placeholder="名前・呼び方で絞り込み" oninput="filterDiaryPeopleList()" style="margin-bottom:9px" />
+      <input id="diaryPeopleSearch" class="search" placeholder="名前・呼び方で絞り込み" oninput="filterDiaryPeopleList()" style="margin-bottom:9px">
       <div id="diaryTagFilterBar"></div>
       <button type="button" class="add-listener-btn" onclick="newListenerFromDiary()">＋ 新しいリスナーを登録して追加</button>
       <div id="diaryPeople"></div>
@@ -1209,5 +1269,6 @@ function renderUpcomingBirthdays(){
 const _oldRenderAll=renderAll; renderAll=function(){_oldRenderAll();renderDiaries();renderBirthdayAlerts();renderBirthdayCalendar();};
 renderAll();
 </script>
-</body>
-</html>
+
+
+</body></html>
